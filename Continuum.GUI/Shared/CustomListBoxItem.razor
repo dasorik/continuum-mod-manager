@@ -1,0 +1,43 @@
+﻿@implements IDisposable
+
+@if (visible)
+{
+    <div class="custom-option" @onclick="Click">
+        <span class="icon"><img src="@Icon" /></span>
+        <span class="text">@Text</span>
+    </div>
+}
+
+@code {
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string Icon { get; set; }
+
+    protected bool visible = true;
+
+    [CascadingParameter] public CustomListBox ParentComponent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (ParentComponent == null)
+            throw new System.Exception("Must be used within CustomListBox");
+
+        ParentComponent.Register(this);
+    }
+
+    protected void Click()
+    {
+        ParentComponent.UpdateValueAndClose(this.Value);
+    }
+
+    public void Visible(bool visible)
+    {
+        this.visible = visible;
+        this.StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        ParentComponent.Unregister(this);
+    }
+}

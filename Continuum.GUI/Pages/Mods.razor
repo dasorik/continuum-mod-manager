@@ -1,0 +1,647 @@
+﻿@page "/mods"
+@page "/mods/{category}"
+
+@implements IDisposable
+
+@using System.IO;
+@using Continuum.Core.Models;
+@using Continuum.Core.Enums;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+@inject Continuum.GUI.Services.ToastService toastService;
+@inject Tewr.Blazor.FileReader.IFileReaderService fileReaderService;
+@inject NavigationManager navigationManager
+
+
+@if (showLoadingIcon)
+{
+    <LoadingScreen></LoadingScreen>
+}
+
+<div class="header">
+    @if (multiSelectMode == MultiSelectOptionState.NotEnabled)
+    {
+        <label class="btn btn-primary icon add right">
+            <input class="hidden" type="file" @ref=inputTypeFileElement @onchange="() => ReadFile(inputTypeFileElement)" />
+            Add Mod
+        </label>
+    }
+    else
+    {
+        <button class="btn btn-warning" @onclick="() => ClearMultiSelect()">
+            Cancel ✖
+        </button>
+
+        var install = multiSelectMode == MultiSelectOptionState.EnabledNotInstalledOnly;
+        <button class="btn btn-primary icon install right" @onclick="() => InstallSelectedMods(install, selectedMods.ToArray())">
+            @(install ? "Install" : "Uninstall")
+        </button>
+    }
+    <span class="flex-grow-1"></span>
+    <input type="text" placeholder="Search" class="text-box search-box" @bind="SearchText" @bind:event="oninput" />
+    <span class="flex-grow-1"></span>
+
+    <select @bind="groupCategory" class="select-box">
+        <option value="Name">Name</option>
+        <option value="AuthorName">Author, Name</option>
+        <option value="CategoryName">Category, Name</option>
+    </select>
+
+    <select @bind="sortOrder" class="select-box">
+        <option value="Ascending">A → Z</option>
+        <option value="Descending">Z → A</option>
+    </select>
+</div>
+
+@{var installedMods = @GetFilteredList(true);}
+@{var availableMods = @GetFilteredList(false);}
+
+<div class="mod-section">
+
+    @if (installedMods.Count() > 0)
+    {
+        <div>
+            <div class="mod-section-header flex-container">
+                <span>Installed (@installedMods.Count())</span><hr />
+            </div>
+            <div>
+                @if (!frameBuffer)
+                {
+                    foreach (var mod in installedMods)
+                    {
+                        string contextID = $"context-menu-{@mod.ModID}";
+
+                        if (multiSelectMode == MultiSelectOptionState.NotEnabled)
+                        {
+                            <ContextMenu Id="@contextID">
+                                <Item OnClick="(e) => { TryDeleteMod(mod); }">Remove from list</Item>
+                            </ContextMenu>
+                        }
+
+                        <ContextMenuTrigger MenuId="@contextID" CssClass="blazor-context-menu-area">
+                            <ModIcon Mod="mod" IconPath="@modService.GetModIcon(integration, mod)" Installed="@modService.IsModInstalled(integration, mod)" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Installed(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(true)"></ModIcon>
+                        </ContextMenuTrigger>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (availableMods.Count() > 0 || installedMods.Count() > 0)
+    {
+        <div>
+            <div class="mod-section-header flex-container">
+                <span>Available for Install (@availableMods.Count())</span><hr />
+            </div>
+            <div>
+                @if (!frameBuffer)
+                {
+                    foreach (var mod in availableMods)
+                    {
+                        string contextID = $"context-menu-{@mod.ModID}";
+
+                        if (multiSelectMode == MultiSelectOptionState.NotEnabled)
+                        {
+                            <ContextMenu Id="@contextID">
+                                <Item OnClick="(e) => { TryDeleteMod(mod); }">Remove from list</Item>
+                            </ContextMenu>
+                        }
+
+                        <ContextMenuTrigger MenuId="@contextID" CssClass="blazor-context-menu-area">
+                            <ModIcon Mod="mod" IconPath="@modService.GetModIcon(integration, mod)" Installed="@modService.IsModInstalled(integration, mod)" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Uninstalled(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(false)"></ModIcon>
+                        </ContextMenuTrigger>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (availableMods.Count() == 0 && installedMods.Count() == 0)
+    {
+        <div class="empty-region">
+            <div class="vertical-center-main">
+                <div class="flex-grow-1"></div>
+                <img src="/img/empty-icon.svg" />
+
+                <div class="detail-text">No mods found for the current category or search criteria, add one to get started!</div>
+                <label class="btn btn-primary icon add right">
+                    <input class="hidden" type="file" @ref=inputTypeFileElement2 @onchange="() => ReadFile(inputTypeFileElement2)" />
+                    Add Mod
+                </label>
+
+                <div class="flex-grow-1"></div>
+            </div>
+        </div>
+    }
+
+    @if (frameBuffer)
+    {
+        frameBuffer = false;
+        StateHasChanged();
+    }
+
+</div>
+
+@code {
+    [Parameter] public string category { get; set; }
+
+    ElementReference inputTypeFileElement = new ElementReference();
+    ElementReference inputTypeFileElement2 = new ElementReference();
+
+    GameIntegration integration;
+    bool showLoadingIcon = false;
+    int loadingRefreshTime = 100;
+    bool frameBuffer = true;
+
+    int searchDelay = 500;
+    Task searchTask = null;
+    string searchText;
+    string delayedSearchText;
+
+    MultiSelectOptionState multiSelectMode = MultiSelectOptionState.NotEnabled;
+    List<ModConfiguration> selectedMods = new List<ModConfiguration>();
+
+    string SearchText
+    {
+        get { return searchText; }
+        set
+        {
+            searchText = value;
+            SearchTask(value);
+        }
+    }
+
+    SortOrder _sortOrder;
+    SortOrder sortOrder
+    {
+        get
+        {
+            return _sortOrder;
+        }
+        set
+        {
+            _sortOrder = value;
+            modService.SetModFilterOptions(_sortOrder, _groupCategory);
+        }
+    }
+
+    SortGrouping _groupCategory;
+    SortGrouping groupCategory
+    {
+        get
+        {
+            return _groupCategory;
+        }
+        set
+        {
+            _groupCategory = value;
+            modService.SetModFilterOptions(_sortOrder, _groupCategory);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+
+        if (queryStrings.TryGetValue("integration", out var integrationID))
+        {
+            this.integration = modService.AvailableIntegrations.FirstOrDefault(i => i.IntegrationID.Equals(integrationID, StringComparison.InvariantCultureIgnoreCase));
+
+            if (integration == null)
+            {
+                navigationManager.NavigateTo("integrations");
+                return;
+            }
+        }
+
+        navigationManager.LocationChanged += LocationChanged;
+        toastService.OnReloadPersistentToastPopups += ReloadPersistentToastPopups;
+    }
+
+    void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        AddOneFrameBuffer();
+    }
+
+    void AddOneFrameBuffer()
+    {
+        frameBuffer = true;
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        navigationManager.LocationChanged -= LocationChanged;
+        toastService.OnReloadPersistentToastPopups -= ReloadPersistentToastPopups;
+
+        toastService.ReloadPersistentToastPopups();
+    }
+
+    async void SearchTask(string text)
+    {
+        var delayTask = Task.Delay(searchDelay);
+        this.searchTask = delayTask;
+
+        await delayTask;
+
+        if (this.searchTask == delayTask)
+        {
+            searchTask = null;
+            delayedSearchText = text;
+
+            AddOneFrameBuffer();
+        }
+    }
+
+    protected bool CanShowMultiSelectElements(bool installed)
+    {
+        if (multiSelectMode == MultiSelectOptionState.NotEnabled)
+            return true;
+
+        if (multiSelectMode == MultiSelectOptionState.EnabledInstalledOnly && installed)
+            return true;
+
+        if (multiSelectMode == MultiSelectOptionState.EnabledNotInstalledOnly && !installed)
+            return true;
+
+        return false;
+    }
+
+    protected IEnumerable<ModConfiguration> GetFilteredList(bool installed)
+    {
+        var mods = modService.GetModsForCategory(integration, category, installed);
+        var filteredMods = mods.Where(m => string.IsNullOrEmpty(delayedSearchText) || m.DisplayName.Contains(delayedSearchText, StringComparison.InvariantCultureIgnoreCase));
+
+        if (groupCategory == SortGrouping.Name)
+        {
+            if (sortOrder == SortOrder.Ascending)
+                return filteredMods.OrderBy(grp => GetSortComparisonOption(grp).ToUpper().Trim());
+            else
+                return filteredMods.OrderByDescending(grp => GetSortComparisonOption(grp).ToUpper().Trim());
+        }
+        else
+        {
+            if (sortOrder == SortOrder.Ascending)
+            {
+                var groupedMods = filteredMods.GroupBy(m => GetGroupComparisonOption(m).ToUpper().Trim()).OrderBy(m => m.Key);
+                return groupedMods.SelectMany(g => g.OrderBy(grp => GetSortComparisonOption(grp).ToUpper().Trim()));
+            }
+            else
+			{
+                var groupedMods = filteredMods.GroupBy(m => GetGroupComparisonOption(m).ToUpper().Trim()).OrderByDescending(m => m.Key);
+                return groupedMods.SelectMany(g => g.OrderByDescending(grp => GetSortComparisonOption(grp).ToUpper().Trim()));
+			}
+        }
+    }
+
+    protected string GetSortComparisonOption(ModConfiguration mod)
+    {
+        switch (groupCategory)
+        {
+            case SortGrouping.Name: return mod.DisplayName;
+            case SortGrouping.AuthorName: return mod.DisplayName;
+            case SortGrouping.CategoryName: return mod.DisplayName;
+            default: return mod.DisplayName;
+        }
+    }
+
+    protected string GetGroupComparisonOption(ModConfiguration mod)
+    {
+        switch (groupCategory)
+        {
+            case SortGrouping.Name: return mod.DisplayName;
+            case SortGrouping.AuthorName: return mod.Author.Name;
+            case SortGrouping.CategoryName: return mod.GetCategoryForIntegration(integration);
+            default: return mod.DisplayName;
+        }
+    }
+
+    protected void ReloadPersistentToastPopups()
+    {
+        if (!modService.IntegrationSettingsAreValid(integration))
+        {
+            toastService.AddToast(new ToastData()
+            {
+                message = "Some integration settings have not been set up, click to set up now",
+                canClose = false,
+                level = AlertLevel.Warning,
+                contextButton = new ToastDataContextButton(() => dialogService.ShowOptionsPopup(SettingsTab.Integration), "Settings")
+            });
+        }
+
+        if (modService.RequiresSetUp(integration))
+        {
+            toastService.AddToast(new ToastData()
+            {
+                message = "Your game installation needs to be configured before mods can be installed. Click to set up now",
+                canClose = false,
+                level = AlertLevel.Info,
+                contextButton = new ToastDataContextButton(() => TrySetUpProject(), "Set Up")
+            });
+        }
+    }
+
+    bool TrySetUpProject()
+    {
+        if (modService.RequiresSetUp(integration))
+        {
+            dialogService.ShowAlertDialog(
+                title: "Set up installation?",
+                message: "Your game installation needs to be configured before mods can be installed. Would you like to do this now? (depending on the game, this may take a few minutes)",
+                level: AlertLevel.Info,
+                onClick: async () =>
+                {
+                    var loadingContext = new Continuum.Core.ProgressTracker();
+                    var dialog = dialogService.ShowLoadingDialog(
+                        title: "Setting up game files",
+                        progressTracker: loadingContext,
+                        refreshTime: loadingRefreshTime
+                    );
+
+                    await StateHasChangedAsync(); // Force UI update
+
+                    var status = await modService.ApplySetUp(integration, loadingContext);
+
+                    dialogService.Remove(dialog); // Remove the loading icon
+                    toastService.ReloadPersistentToastPopups();
+
+                    await StateHasChangedAsync(); // Force UI update
+
+                    switch (status)
+                    {
+                        case Services.ModSetUpStatus.Success:
+                            toastService.AddToast(new ToastData()
+                            {
+                                message = "Set up complete!",
+                                canClose = true,
+                                level = AlertLevel.Info
+                            });
+                            break;
+                        case Services.ModSetUpStatus.SetUpFailed:
+                            dialogService.ShowAlertDialog(
+                                title: "Oops, Something went wrong!",
+                                message: "Something went wrong during set up. Please reverify your game files and try again",
+                                level: AlertLevel.Error
+                            );
+                            break;
+                        case Services.ModSetUpStatus.ModifiedInstallation:
+                            dialogService.ShowAlertDialog(
+                                title: "Modified installation detected",
+                                message: "We've detected that your installation differs from the base installation. Please reverify your game files",
+                                level: AlertLevel.Error
+                            );
+                            break;
+                    }
+                }
+            );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task StateHasChangedAsync()
+    {
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+
+    async Task ReadFile(ElementReference inputControl)
+    {
+        showLoadingIcon = true;
+        await StateHasChangedAsync();
+
+        Tewr.Blazor.FileReader.IFileReference fileReference = null;
+        Tewr.Blazor.FileReader.IFileReaderRef fileReader = fileReaderService.CreateReference(inputControl);
+
+        foreach (var file in await fileReader.EnumerateFilesAsync())
+        {
+            fileReference = file;
+            break;
+        }
+
+        if (fileReference == null)
+        {
+            showLoadingIcon = false;
+            return;
+        }
+
+        byte[] fileBytes;
+        string fileName;
+
+        using (MemoryStream memoryStream = await fileReference.CreateMemoryStreamAsync(4096))
+        {
+            fileBytes = memoryStream.ToArray();
+            fileName = (await fileReference.ReadFileInfoAsync()).Name;
+        }
+
+        var result = modService.TryAddMod(fileName, fileBytes);
+        var errorMessage = result.loadErrors.FirstOrDefault() ?? "An unknown error occurred";
+
+        if (result.status != LoadStatus.Success)
+        {
+            dialogService.ShowAlertDialog(
+                title: "Unable to load mod",
+                message: errorMessage,
+                level: AlertLevel.Error
+            );
+        }
+
+        // Make sure to reset this...
+        await fileReader.ClearValue();
+
+        showLoadingIcon = false;
+        AddOneFrameBuffer();
+    }
+
+    void TryDeleteMod(ModConfiguration mod)
+    {
+        if (modService.IsModInstalled(integration, mod))
+        {
+            dialogService.ShowAlertDialog(
+                title: "Can't remove mod",
+                message: "This mod is currently installed, and cannot be removed",
+                level: AlertLevel.Warning
+            );
+        }
+        else
+        {
+            dialogService.ShowConfirmDialog(
+                title: "Delete this mod?",
+                message: "Are you sure you want to delete this mod?",
+                level: AlertLevel.Warning,
+                confirmAction: async () => { modService.DeleteMod(mod); AddOneFrameBuffer(); }
+            );
+        }
+    }
+
+    protected async Task SelectMod(ModConfiguration mod)
+    {
+        if (multiSelectMode == MultiSelectOptionState.NotEnabled)
+        {
+            dialogService.ShowModDetailsPopup(
+                integration: integration,
+                mod: mod,
+                onInstallSelected: async (m) => InstallSelectedMods(!modService.IsModInstalled(integration, m), m)
+            );
+        }
+        else
+        {
+            SelectMultiSelect(mod, this.multiSelectMode);
+        }
+    }
+
+    protected async Task SelectMultiSelect_Uninstalled(ModConfiguration mod)
+    {
+        SelectMultiSelect(mod, MultiSelectOptionState.EnabledNotInstalledOnly);
+    }
+
+    protected async Task SelectMultiSelect_Installed(ModConfiguration mod)
+    {
+        SelectMultiSelect(mod, MultiSelectOptionState.EnabledInstalledOnly);
+    }
+
+    protected void SelectMultiSelect(ModConfiguration mod, MultiSelectOptionState multiSelectMode)
+    {
+        bool selected = selectedMods.Contains(mod);
+        bool isInstalled = modService.IsModInstalled(integration, mod);
+
+        // Don't allow options to be selected if they are of the opposing type
+        if (multiSelectMode == MultiSelectOptionState.EnabledInstalledOnly && !isInstalled)
+            return;
+
+        if (multiSelectMode == MultiSelectOptionState.EnabledNotInstalledOnly && isInstalled)
+            return;
+
+        if (selected)
+            selectedMods.Remove(mod);
+        else
+            selectedMods.Add(mod);
+
+        if (selectedMods.Count == 0)
+            ClearMultiSelect();
+        else
+            this.multiSelectMode = multiSelectMode;
+    }
+
+    protected void ClearMultiSelect()
+    {
+        selectedMods.Clear();
+        multiSelectMode = MultiSelectOptionState.NotEnabled;
+    }
+
+    void InstallSelectedMods(bool install, params ModConfiguration[] mods)
+    {
+        if (!modService.IntegrationSettingsAreValid(integration))
+        {
+            dialogService.ShowAlertDialog(
+                title: null,
+                message: "Some integration settings have not been set up, please configure these in 'Settings'",
+                level: AlertLevel.Info
+            );
+
+            return;
+        }
+
+        if (!modService.ModSettingsAreValid(mods))
+        {
+            dialogService.ShowAlertDialog(
+                title: null,
+                message: $"One or more mods selected have settings that need to be set up before install. Please configure this via the 'Settings' tab when viewing the details of a mod.",
+                level: AlertLevel.Info
+            );
+
+            return;
+        }
+
+        if (TrySetUpProject())
+            return;
+
+        ShowInstallConfirmationDialog(install, mods);
+    }
+
+    void ShowInstallConfirmationDialog(bool install, ModConfiguration[] mods)
+    {
+        dialogService.ShowConfirmDialog(
+            title: $"{(install ? "Install" : "Uninstall")} Mod{(mods.Length > 1 ? "s" : string.Empty)}",
+            message: $"This will modify your {integration.DisplayName} game installation",
+            level: AlertLevel.Warning,
+            confirmAction: () => UpdateModConfiguration(install, mods)
+        );
+    }
+
+    async Task UpdateModConfiguration(bool install, ModConfiguration[] mods)
+    {
+        InstallResult installStatus;
+
+        var loadingContext = new Continuum.Core.ProgressTracker();
+        var dialog = dialogService.ShowLoadingDialog(
+            title: $"{(install ? "Installing" : "Uninstalling")} Mod{(mods.Length > 1 ? "s" : string.Empty)}",
+            progressTracker: loadingContext,
+            refreshTime: loadingRefreshTime
+        );
+
+        await StateHasChangedAsync(); // Force UI update
+
+        if (install)
+            installStatus = await modService.InstallMods(integration, mods, loadingContext);
+        else
+            installStatus = await modService.UninstallMods(integration, mods, loadingContext);
+
+        dialogService.Remove(dialog);
+        toastService.ReloadPersistentToastPopups();
+
+        await StateHasChangedAsync(); // Force UI update
+
+        switch (installStatus.status)
+        {
+            case InstallationStatus.FatalError:
+                dialogService.ShowAlertDialog(
+                    title: "Oops, something went wrong!",
+                    message: "Something went wrong during mod installation. All mods have been uninstalled, and your game has been restored",
+                    level: AlertLevel.Error
+                );
+                break;
+            case InstallationStatus.RolledBackError:
+                dialogService.ShowAlertDialog(
+                    title: "Oops, something went wrong!",
+                    message: "Something went wrong during mod installation. The selected mod(s) have not been installed",
+                    level: AlertLevel.Error
+                );
+                break;
+            case InstallationStatus.UnresolvableConflict:
+                var conflict = installStatus.conflicts.First();
+                var conflictMod = modService.GetMod(conflict.modID);
+
+                dialogService.ShowAlertDialog(
+                    title: "Mod conflict detected",
+                    message: $"A conflict was detected while installing the mod '{conflictMod.DisplayName}'. The selected mod(s) have not been installed. \nReason: {conflict.description}",
+                    level: AlertLevel.Error
+                );
+                break;
+            case InstallationStatus.ResolvableConflict:
+                var potentialConflict = installStatus.conflicts.First();
+                var potentialMod = modService.GetMod(potentialConflict.modID);
+
+                dialogService.ShowAlertDialog(
+                    title: $"Potential conflict detected",
+                    message: $"The a potential conflict was detected while installating the mod '{potentialMod.DisplayName}' (This is generally ok). \nReason: {potentialConflict.description}",
+                    level: AlertLevel.Warning
+                );
+                break;
+        }
+
+        dialogService.Remove<ModDetailsConfig>();
+
+        multiSelectMode = MultiSelectOptionState.NotEnabled;
+        selectedMods.Clear();
+
+        await StateHasChangedAsync();
+    }
+}

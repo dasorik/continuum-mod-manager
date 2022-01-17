@@ -1,0 +1,78 @@
+﻿@implements IDisposable
+
+<div>
+    <div class="popup-container">
+        <div class="popup-dialog wide">
+            <div class="popup-icon">
+                <img src="img/icon-install-blue.svg" />
+            </div>
+            <div class="popup-title">
+                @Config.title
+            </div>
+            <div class="loading-action-container">
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: @(PercentageComplete)%" aria-valuenow="@(PercentageComplete)" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="popup-message">
+                <div class="loading-context">@(GetTrackerString(Config.tracker.Context))</div>
+                <div class="loading-jobs">
+                    <div class="lds-ring-inline">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    @Config.tracker.CompletedActions/@Config.tracker.TotalActions jobs completed
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public LoadingDialogConfig Config { get; set; }
+
+    private bool disposed = false;
+
+    public float PercentageComplete => (float)Math.Round((Config.tracker.CompletedActions / (float)Config.tracker.TotalActions) * 100, 2);
+
+    protected override void OnInitialized()
+    {
+        StartTimerAsync();
+    }
+
+    public async void StartTimerAsync()
+    {
+        while (!disposed)
+        {
+            StateHasChanged();
+
+            await Task.Delay(Config.refreshTime);
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        disposed = true;
+    }
+
+    protected string GetTrackerString(string text)
+    {
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            if (text.Length > 70)
+            {
+                return $"{text.Substring(0, 35)} ... {text.Substring(text.Length - 35, 35)}";
+            }
+            else
+            {
+                return text;
+            }
+        }
+        else
+        {
+            return $"Loading...";
+        }
+    }
+}

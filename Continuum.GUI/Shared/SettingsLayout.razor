@@ -1,0 +1,109 @@
+﻿@using Continuum.GUI.Models;
+@using Continuum.Common;
+@using Continuum.Core.Enums;
+
+<div class="settings-main">
+    @foreach (var category in Settings)
+    {
+        <div class="mod-section-header small flex-container">
+            <span>@category.Category</span><hr />
+        </div>
+
+        <table>
+        @foreach (var setting in category.Settings)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(setting.Setting.Description))
+                    {
+                        <span class="setting-name" title="@setting.Setting.Description">@setting.Setting.SettingName</span>
+                    }
+                    else
+					{
+                        <span class="setting-name">@setting.Setting.SettingName</span>
+					}
+                </td>
+                <td>
+                    <div class="validation-error-placeholder">
+                        @if (responses[setting.SettingID]?.IsError ?? false)
+                        {
+                            <div class="validation-error" title="@(responses[setting.SettingID]?.Message ?? string.Empty)">
+                                <img src="img/alert-error.svg" />
+                            </div>
+                        }
+                    </div>
+                    <div class="locked-setting-placeholder">
+                        @if (Disabled || setting.IsLocked)
+                        {
+                            <div class="locked-setting" title="This setting is locked and cannot be edited">
+                                <img src="img/icon-locked.svg" />
+                            </div>
+                        }
+                    </div>
+                </td>
+                <td class="right-align @(responses[setting.SettingID]?.IsError ?? false ? "validation-error" : "")">
+                    @if (setting.Setting.Type == ModSettingType.Checkbox)
+                    {
+                        <CustomCheckbox Disabled="@(Disabled || setting.IsLocked)" Checked="(bool)setting.Value" OnCheckChanged="((e) => SetValue(setting.SettingID, e))"></CustomCheckbox>
+                    }
+                    else if (setting.Setting.Type == ModSettingType.DropDown)
+                    {
+                        <select disabled="@(Disabled || setting.IsLocked)" type="text" class="select-box" @bind-value="@setting.StringValue" @bind-value:event="onchange" @oninput="@(e => SetValue(setting.SettingID, e.Value))">
+                            @foreach (var modOption in setting.Setting.Options)
+                            {
+                                <option value="@modOption.Value">@modOption.Text</option>
+                            }
+                        </select>
+                    }
+                    else if (setting.Setting.Type == ModSettingType.Text)
+                    {
+                        <input disabled="@(Disabled || setting.IsLocked)" type="text" class="text-box full" @bind-value="@setting.StringValue" @bind-value:event="onchange" @oninput="@(e => SetValue(setting.SettingID, e.Value))" />
+                    }
+                </td>
+            </tr>
+        }
+        </table>
+    }
+</div>
+
+@code {
+    [Parameter] public ModSettingCategoryDTO[] Settings { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback<bool> OnSettingChanged { get; set; }
+
+    private Dictionary<string, ModSettingDTO> settingDict = new Dictionary<string, ModSettingDTO>();
+    private Dictionary<string, ValidationResponse> responses = new Dictionary<string, ValidationResponse>();
+
+    protected override void OnInitialized()
+    {
+        if (Settings != null)
+        {
+            foreach (var setting in Settings.SelectMany(c => c.Settings))
+            {
+                settingDict.Add(setting.SettingID, setting);
+                responses.Add(setting.SettingID, null);
+
+                ValidateSetting(setting, setting.Value);
+            }
+
+            OnSettingChanged.InvokeAsync(true);
+        }
+    }
+
+    void SetValue(string settingID, object value)
+    {
+        if (settingDict.TryGetValue(settingID, out var setting))
+        {
+            setting.Value = value;
+            ValidateSetting(setting, value);
+        }
+
+        OnSettingChanged.InvokeAsync(false);
+    }
+
+    void ValidateSetting(ModSettingDTO setting, object value)
+    {
+        responses[setting.SettingID] = setting.Setting.ValidateSetting(value);
+        setting.IsValid = responses[setting.SettingID].Type != ValidationSeverity.Error;
+    }
+}

@@ -1,0 +1,210 @@
+﻿@using Continuum.Core.Models;
+@using Continuum.GUI.Models;
+@using Continuum.Common.Utilities;
+@using Continuum.GUI.Extensions;
+
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+
+<div>
+    <div class="popup-container" @onclick="RouteCloseAction">
+        <div class="popup-large-details" @onclick:stopPropagation="true">
+            <div class="mod-details-header-img">
+                <div class="vertical-align-helper"></div>
+                <img src="@Base64Utility.ConvertFileToBase64(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayBackground ?? Config.selectedMod.DisplayImage))" class="vertical-align unselectable" />
+                <div class="black-fade"></div>
+            </div>
+            <div class="large-vertical-split">
+                <div class="details-left-column mod">
+                    <div class="mod-details-icon">
+                        <img src="@Base64Utility.ConvertFileToBase64(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayImage))" class="vertical-align unselectable" />
+                    </div>
+                </div>
+                <div class="details-right-column pad-left">
+                    <div class="mod-details-header-container">
+                        <div class="mod-details-header">
+                            <h1>@Config.selectedMod.DisplayName</h1>
+                            <div class="header-extra-info">
+                                <span class="icon-author">@Config.selectedMod.Author.Name</span>
+                                <span class="icon-version"><i>Version</i> @Config.selectedMod.Version</span>
+                            </div>
+                        </div>
+                        <div class="install-button">
+                            <button class="btn btn-primary icon install right" @onclick="RouteInstallAction">
+                                @(modService.IsModInstalled(Config.integration, Config.selectedMod) ? "Uninstall" : "Install")
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tab-row">
+                        <span class="tab-option @(activeTab == ActiveTab.Details ? "active" : "")" @onclick="@(() => activeTab = ActiveTab.Details)">Details</span>
+                        @if ((Config.selectedMod.Settings?.Count() ?? 0) > 0)
+                        {
+                            <span class="tab-option @(activeTab == ActiveTab.Options ? "active" : "")" @onclick="@(() => activeTab = ActiveTab.Options)">Options</span>
+                        }
+                        <span class="tab-option @(activeTab == ActiveTab.Credits ? "active" : "")" @onclick="@(() => activeTab = ActiveTab.Credits)">Credits</span>
+                    </div>
+                    <div class="details-area">
+                        @if (activeTab == ActiveTab.Details)
+                        {
+                            var descriptionSplit = Config.selectedMod.Description.Split('\n');
+
+                            for (int i = 0; i < descriptionSplit.Length; i++)
+                            {
+                                if (descriptionSplit[i].StartsWith("#"))
+                                {
+                                    <div class="mod-section-header small flex-container">
+                                        <span>@descriptionSplit[i].Substring(1)</span><hr />
+                                    </div>
+                                }
+                                else if (descriptionSplit[i].StartsWith("\\#"))
+                                {
+                                    <div>
+                                        @descriptionSplit[i].Substring(1)
+                                    </div>
+                                }
+                                else if (string.IsNullOrWhiteSpace(descriptionSplit[i]))
+                                {
+                                    <br />
+                                }
+                                else
+                                {
+                                    <div>
+                                        @descriptionSplit[i]
+                                    </div>
+                                }
+                            }
+                        }
+                        else if (activeTab == ActiveTab.Options)
+                        {
+                            <div class="settings-vertical-layout">
+                                <div>
+                                    <SettingsLayout Disabled="modService.IsModInstalled(Config.integration, Config.selectedMod)" Settings="settings" OnSettingChanged="(init) => { enableSave |= !init; StateHasChanged(); }"></SettingsLayout>
+                                </div>
+                                <div class="settings-save">
+                                    @if (modService.IsModInstalled(Config.integration, Config.selectedMod))
+                                    {
+                                        <BannerAlert Message="Settings cannot be edited when a game is installed" Type="@AlertLevel.Info"></BannerAlert>
+                                    }
+                                    else
+                                    {
+                                        <button @onclick="SaveSettings" disabled="@SaveButtonDisabled()" class="btn btn-primary">Save</button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else if (activeTab == ActiveTab.Credits)
+                        {
+                            <div class="mod-section-header small flex-container">
+                                <span>Author</span><hr />
+                            </div>
+
+                            <div class="icon-left icon-author">
+                                <span>@Config.selectedMod.Author.Name</span>
+
+                                @if (!string.IsNullOrWhiteSpace(Config.selectedMod.Author.Role))
+                                {
+                                    <br /><span class="author-role">@Config.selectedMod.Author.Role</span>
+                                }
+                            </div>
+
+                            if (Config.selectedMod.Contributors != null && Config.selectedMod.Contributors.Length > 0)
+                            {
+                                <div class="mod-section-header small flex-container">
+                                    <span>Contributors / Special Thanks</span><hr />
+                                </div>
+
+                                foreach (var contributor in Config.selectedMod.Contributors)
+                                {
+                                    <div class="icon-left icon-author">
+                                        <span>@contributor.Name</span>
+
+                                        @if (!string.IsNullOrWhiteSpace(contributor.Role))
+                                        {
+                                            <br /><span class="author-role">@contributor.Role</span>
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public ModDetailsConfig Config { get; set; }
+
+    protected ActiveTab activeTab = ActiveTab.Details;
+    bool enableSave = false;
+
+    private ModSettingCategoryDTO[] settings;
+
+    protected override void OnInitialized()
+    {
+        if (Config.selectedMod.Settings != null)
+        {
+            var settingsList = new List<ModSettingCategoryDTO>();
+
+            foreach (var category in Config.selectedMod.Settings)
+            {
+                var settingsDTO = category.Settings.Select(s => new ModSettingDTO(s, modService.Settings.GetModOptions(Config.selectedMod.ModID, s.SettingID).Value)).ToArray();
+                settingsList.Add(new ModSettingCategoryDTO(category.Category, settingsDTO));
+            }
+
+            settings = settingsList.ToArray();
+        }
+    }
+
+    void SaveSettings()
+    {
+        foreach (var category in settings)
+        {
+            foreach (var setting in category.Settings)
+            {
+                modService.Settings.SetModOption(Config.selectedMod.ModID, setting.SettingID, setting.Value);
+            }
+        }
+
+        modService.SaveSettings();
+        enableSave = false;
+    }
+
+    bool SaveButtonDisabled()
+    {
+        return !enableSave || (settings.SelectMany(c => c.Settings)?.Any(s => !s.IsValid) ?? false);
+    }
+
+    protected async void RouteInstallAction()
+    {
+        await Config.onInstallSelected.InvokeSafe(Config.selectedMod);
+    }
+
+    protected async void RouteCloseAction()
+    {
+        if (enableSave)
+        {
+            dialogService.ShowConfirmDialog(
+                title: "Unsaved Changes",
+                message: "You have unsaved changes, are you sure you want to close this menu?",
+                level: AlertLevel.Warning,
+                cancelAction: async () => { await Config.onClose.InvokeSafe(); },
+                cancelText: "Close",
+                confirmAction: null,
+                confirmText: "Go back"
+            );
+        }
+        else
+        {
+            await Config.onClose.InvokeSafe();
+        }
+    }
+
+    protected enum ActiveTab
+    {
+        Details,
+        Options,
+        Credits
+    }
+}

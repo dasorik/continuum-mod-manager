@@ -1,0 +1,131 @@
+﻿@using Continuum.Core.Models;
+@using Continuum.Common.Utilities;
+@using Continuum.GUI.Extensions; 
+@using Microsoft.AspNetCore.WebUtilities;
+@using System.Web;
+
+@implements IDisposable
+
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+@inject NavigationManager navigationManager;
+
+<div class="top-row navbar">
+    <div class="tool-logo" aria-hidden="true"></div>
+</div>
+
+<div>
+    <ul class="nav flex-column">
+        @{var isOnModsPage = navigationManager.Uri.Contains("/mods");}
+
+        @if (isOnModsPage)
+        {
+            var integration = GetIntergration();
+
+            <li class="px-3 py-2 flex-container nav-header">
+                <span>Game</span><hr />
+            </li>
+
+            <li class="px-2 py-1">
+                <div class="integration-button" @onclick="OpenIntegrations">
+                    <span class="back-arrow"></span>
+                    <span class="icon"><img src="@Base64Utility.ConvertFileToBase64(integration.GetRelativePath(integration.DisplayIcon))" class="unselectable" /></span>
+                    <span class="text">@integration.DisplayName</span>
+                </div>
+            </li>
+
+            <li class="px-3 py-2 flex-container nav-header">
+                <span>Categories</span><hr />
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link unselectable" href="@GetQueryParams(integration, null)" Match="NavLinkMatch.All">
+                    <span class="nav-icon all" aria-hidden="true"></span> All
+                </NavLink>
+            </li>
+
+            foreach (var category in integration.Categories)
+            {
+                <li class="nav-item">
+                    <NavLink class="nav-link unselectable" href="@GetQueryParams(integration, category.Category)" Match="NavLinkMatch.All">
+                        <span class="nav-icon" aria-hidden="true"><img src="@Base64Utility.ConvertFileToBase64(integration.GetRelativePath(category.IconPath))" class="unselectable" /></span> @category.DisplayName
+                    </NavLink>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="px-3 py-2 flex-container nav-header">
+                <span>Integrations</span><hr />
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link unselectable" href="integrations" Match="NavLinkMatch.All">
+                    <span class="nav-icon all" aria-hidden="true"></span> All Integrations
+                </NavLink>
+            </li>
+        }
+
+        <li class="px-3 py-2 flex-container nav-header">
+            <span>Settings</span><hr />
+        </li>
+        <li class="nav-item">
+            <a class="nav-link unselectable" href="javascript:void(0);" @onclick="(e) => dialogService.ShowOptionsPopup(isOnModsPage ? SettingsTab.Integration : SettingsTab.AllIntegrations)">
+                <span class="nav-icon gear" aria-hidden="true"></span> Settings
+            </a>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link unselectable" href="Logs" Match="NavLinkMatch.All">
+                <span class="nav-icon logs" aria-hidden="true"></span> Logs
+            </NavLink>
+        </li>
+    </ul>
+
+    <span class="version-number">Application Version @System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()</span>
+</div>
+
+@code {
+    void OpenIntegrations()
+    {
+        navigationManager.NavigateTo("integrations");
+    }
+
+    GameIntegration GetIntergration()
+    {
+        var id = navigationManager.QueryString("integration");
+        return modService.AvailableIntegrations.FirstOrDefault(i => i.IntegrationID.Equals(id, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    string GetQueryParams(GameIntegration integration, string category)
+    {
+        var queryParams = new Dictionary<string, string>()
+        {
+            ["integration"] = integration.IntegrationID
+        };
+
+        if (category != null)
+        {
+            return QueryHelpers.AddQueryString($"mods/{category.ToLower()}", queryParams);
+        }
+        else
+        {
+            return QueryHelpers.AddQueryString($"mods", queryParams);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        navigationManager.LocationChanged += LocationChanged;
+    }
+
+    void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        navigationManager.LocationChanged -= LocationChanged;
+    }
+}

@@ -1,0 +1,30 @@
+﻿@page "/Logs"
+
+@using Continuum.Common.Logging;
+
+<div class="mod-section-header flex-container">
+    <span>Logs</span><hr />
+</div>
+
+<div class="log-textarea">
+@foreach(var log in Continuum.GUI.AppLogger.GetLogs())
+{
+    <span class="@GetLogSeverityClass(log.severity)">[@log.date.ToString("dd/MM/yyyy hh:sstt")] - @log.message</span>
+}
+</div>
+
+@code {
+
+    public string GetLogSeverityClass(LogSeverity severity)
+    {
+        switch (severity)
+        {
+            case LogSeverity.Warning:
+                return "warning";
+            case LogSeverity.Error:
+                return "error";
+        }
+
+        return string.Empty;
+    }
+}

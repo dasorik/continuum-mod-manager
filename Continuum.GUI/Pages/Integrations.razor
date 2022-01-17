@@ -1,0 +1,205 @@
+﻿@page "/integrations"
+
+@implements IDisposable
+
+@using Continuum.Core.Models;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+@inject Tewr.Blazor.FileReader.IFileReaderService fileReaderService;
+@inject NavigationManager navigationManager
+
+
+@if (showLoadingIcon)
+{
+    <LoadingScreen></LoadingScreen>
+}
+
+<div class="header">
+    <span class="flex-grow-1"></span>
+    <input type="text" placeholder="Search" class="text-box search-box" @bind="SearchText" @bind:event="oninput" />
+    <span class="flex-grow-1"></span>
+    <select @bind="sortOrder" class="select-box">
+        <option value="Ascending">A → Z</option>
+        <option value="Descending">Z → A</option>
+    </select>
+</div>
+
+<div class="mod-section">
+
+    @{ var integrations = GetFilteredList(); }
+
+    @if ((integrations?.Count() ?? 0) == 0)
+    {
+        <div class="empty-region">
+            <div class="vertical-center-main">
+                <div class="flex-grow-1"></div>
+                <img src="/img/empty-icon.svg" />
+
+                @if (modService.AvailableIntegrations.Length == 0)
+                {
+                    <div class="detail-text">No game integrations detected, add one to get started!</div>
+                }
+                else
+                {
+                    <div class="detail-text">No integrations found for the current search criteria</div>
+                }
+                <button class="btn btn-primary" @onclick="() => dialogService.ShowOptionsPopup(SettingsTab.AllIntegrations)">Open Settings</button>
+
+                <div class="flex-grow-1"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>
+            <div class="mod-section-header flex-container">
+                <span>Select a Game</span><hr />
+            </div>
+            <div>
+                @if (!frameBuffer)
+                {
+                    @foreach (var integration in integrations)
+                    {
+                        string contextID = $"context-menu-{integration.IntegrationID}";
+                        modService.GetModInfoForIntegration(integration, out int available, out int installed);
+
+                        <IntegrationIcon Integration="integration" OnClick="() => SelectIntegration(integration)" Available="@available" Installed="@installed"></IntegrationIcon>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (frameBuffer)
+    {
+        frameBuffer = false;
+        StateHasChanged();
+    }
+
+</div>
+
+@code {
+    bool showLoadingIcon = false;
+    bool frameBuffer = true;
+
+    int searchDelay = 500;
+    Task searchTask = null;
+    string searchText;
+    string delayedSearchText;
+
+    string SearchText
+    {
+        get { return searchText; }
+        set
+        {
+            searchText = value;
+            SearchTask(value);
+        }
+    }
+
+    SortOrder _sortOrder;
+    SortOrder sortOrder
+    {
+        get
+        {
+            return _sortOrder;
+        }
+        set
+        {
+            _sortOrder = value;
+            modService.SetIntegrationFilterOptions(_sortOrder);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        navigationManager.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
+
+    void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        AddOneFrameBuffer();
+    }
+
+    void AddOneFrameBuffer()
+    {
+        frameBuffer = true;
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        navigationManager.LocationChanged -= LocationChanged;
+    }
+
+    async void SearchTask(string text)
+    {
+        var delayTask = Task.Delay(searchDelay);
+        this.searchTask = delayTask;
+
+        await delayTask;
+
+        if (this.searchTask == delayTask)
+        {
+            searchTask = null;
+            delayedSearchText = text;
+
+            AddOneFrameBuffer();
+        }
+    }
+
+    protected IEnumerable<GameIntegration> GetFilteredList()
+    {
+        var filteredMods = modService.AvailableIntegrations.Where(m => string.IsNullOrEmpty(delayedSearchText) || m.DisplayName.Contains(delayedSearchText, StringComparison.InvariantCultureIgnoreCase));
+
+        if (sortOrder == SortOrder.Ascending)
+            return filteredMods.OrderBy(grp => GetSortComparisonOption(grp).ToUpper().Trim());
+        else
+            return filteredMods.OrderByDescending(grp => GetSortComparisonOption(grp).ToUpper().Trim());
+    }
+
+    protected string GetSortComparisonOption(GameIntegration integration)
+    {
+        return integration.DisplayName;
+    }
+
+    private async Task StateHasChangedAsync()
+    {
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+
+    protected void SelectIntegration(GameIntegration integration)
+    {
+        navigationManager.NavigateTo(GetQueryParams(integration));
+    }
+
+    string GetQueryParams(GameIntegration integration)
+    {
+        var queryParams = new Dictionary<string, string>()
+        {
+            ["integration"] = integration.IntegrationID
+        };
+
+        return QueryHelpers.AddQueryString($"mods", queryParams);
+    }
+
+    protected void TryDeleteIntegration(GameIntegration integration)
+    {
+        if (!modService.CanDeleteIntegration(integration))
+        {
+            dialogService.ShowAlertDialog(
+                title: "Cannot remove integration",
+                level: AlertLevel.Warning,
+                message: "Integration has active mods, please uninstall/remove all mods to delete"
+            );
+
+            return;
+        }
+
+        modService.DeleteIntegration(integration);
+    }
+}

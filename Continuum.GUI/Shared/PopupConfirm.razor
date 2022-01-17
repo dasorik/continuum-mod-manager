@@ -1,0 +1,59 @@
+﻿<div>
+    <div class="popup-container">
+        <div class="popup-dialog @GetAlertClass()">
+            @if (Config.showIcon)
+            {
+                <div class="popup-icon">
+                    <img src="img/@GetAlertIcon()" />
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Config.title))
+            {
+                <div class="popup-title">
+                    @Config.title
+                </div>
+            }
+            <div class="popup-message">
+                @Config.message
+            </div>
+            <div class="popup-buttons">
+                <button type="button" class="btn btn-primary" @onclick="Config.confirmAction">@(string.IsNullOrEmpty(Config.confirmButtonText) ? "OK" : Config.confirmButtonText)</button>
+                <button type="button" class="btn btn-warning" @onclick="Config.cancelAction">@(string.IsNullOrEmpty(Config.cancelButtonText) ? "Cancel" : Config.cancelButtonText)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public ConfirmationDialogConfig Config { get; set; }
+
+    private string GetAlertIcon()
+    {
+        switch (Config.level)
+        {
+            case AlertLevel.Info:
+                return "alert-info.svg";
+            case AlertLevel.Warning:
+                return "alert-warning.svg";
+            case AlertLevel.Error:
+                return "alert-error.svg";
+            default:
+                return "alert-info.svg";
+        }
+    }
+
+    private string GetAlertClass()
+    {
+        switch (Config.level)
+        {
+            case AlertLevel.Info:
+                return "alert-info";
+            case AlertLevel.Warning:
+                return "alert-warning";
+            case AlertLevel.Error:
+                return "alert-error";
+            default:
+                return "alert-info";
+        }
+    }
+}

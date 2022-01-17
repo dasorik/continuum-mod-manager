@@ -1,0 +1,61 @@
+﻿@inherits LayoutComponentBase
+
+<div class="align-items-center alert alert-@GetStyle() no-pad">
+    <div class="d-flex">
+        <div class="toast-body flex-container">
+            <img src="img/@GetAlertIcon()" />
+            <span class="flex-fill">@Message</span>
+            @if (ContextButtonName != null)
+            {
+                <button @onclick="ContextButtonAction" class="btn btn-primary">@ContextButtonName</button>
+            }
+
+            @if (CanClose)
+            {
+                <button type="button" @onclick="OnClose" class="close-button">✕</button>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public AlertLevel Type { get; set; } = AlertLevel.Info;
+    [Parameter] public string ContextButtonName { get; set; } = null;
+    [Parameter] public EventCallback ContextButtonAction { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public bool CanClose { get; set; }
+
+    private string GetAlertIcon()
+    {
+        switch (Type)
+        {
+            case AlertLevel.Info:
+                return "alert-info.svg";
+            case AlertLevel.Warning:
+                return "alert-warning.svg";
+            case AlertLevel.Error:
+                return "alert-error.svg";
+            default:
+                return "alert-info.svg";
+        }
+    }
+
+    string GetStyle()
+    {
+        switch (Type)
+        {
+            case AlertLevel.Error:
+                return "error";
+            case AlertLevel.Warning:
+                return "warning";
+            case AlertLevel.Info:
+                return "info";
+            case AlertLevel.Success:
+                return "success";
+        }
+
+        return string.Empty;
+    }
+}

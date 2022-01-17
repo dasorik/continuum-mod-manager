@@ -1,0 +1,10 @@
+﻿<div aria-live="polite" aria-atomic="true">
+    <div class="toast-container position-absolute p-3">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

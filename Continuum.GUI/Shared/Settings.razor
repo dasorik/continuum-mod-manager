@@ -1,0 +1,391 @@
+﻿@using System.IO;
+@using Continuum.Core.Models;
+@using Continuum.GUI.Models;
+@using Continuum.GUI.Extensions;
+@using Continuum.Core.Enums;
+@using Continuum.Common.Utilities;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+@inject Continuum.GUI.Services.ToastService toastService;
+@inject Tewr.Blazor.FileReader.IFileReaderService fileReaderService;
+@inject NavigationManager navigationManager
+
+@if (showLoadingIcon)
+{
+    <LoadingScreen></LoadingScreen>
+}
+
+<div>
+    <div class="popup-container" @onclick="RouteCloseAction">
+        <div class="popup-large-details" @onclick:stopPropagation="true">
+            <div class="large-vertical-split">
+                <div class="details-left-column options">
+                    <div class="sidebar">
+                        <ul class="nav flex-column">
+                            <li class="px-3 py-2 flex-container nav-header">
+                                <span>Settings</span><hr />
+                            </li>
+                            @if (integration != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @GetActiveClass(SettingsTab.Integration)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.Integration; }">
+                                        <span class="nav-icon" aria-hidden="true">
+                                            <img src="@Base64Utility.ConvertFileToBase64(integration.GetRelativePath(integration.DisplayIcon))" class="unselectable" />
+                                        </span> @integration.DisplayName
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link @GetActiveClass(SettingsTab.Application)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.Application; }">
+                                    <span class="nav-icon gear" aria-hidden="true"></span> Application
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @GetActiveClass(SettingsTab.AllIntegrations)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.AllIntegrations; }">
+                                    <span class="nav-icon game" aria-hidden="true"></span> Integrations
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="details-right-column options">
+                    <div class="details-area">
+                        <div class="settings-vertical-layout">
+                            <div>
+                                @if (activeTab == SettingsTab.Integration)
+                                {
+                                    @if (integration != null)
+                                    {
+                                        <SettingsLayout Settings="integrationSettings" OnSettingChanged="(init) => { enableSave |= !init; StateHasChanged(); }"></SettingsLayout>
+                                    }
+                                    else
+                                    {
+                                        <BannerAlert Message="Please select a game to edit game specific integration settings" Type="@AlertLevel.Info"></BannerAlert>
+                                    }
+                                }
+                                else if (activeTab == SettingsTab.Application)
+                                {
+                                    <SettingsLayout Settings="applicationSettings"></SettingsLayout>
+                                }
+                                else if (activeTab == SettingsTab.AllIntegrations)
+                                {
+                                    <label class="btn btn-primary icon add right">
+                                        <input class="hidden" type="file" @ref=inputTypeFileElement @onchange="ReadFile" />
+                                        Add Integration
+                                    </label>
+
+                                    <div class="mod-section-header small flex-container">
+                                        <span>Installed Integrations</span><hr />
+                                    </div>
+
+                                    foreach (var integration in modService.AvailableIntegrations)
+                                    {
+                                        <div class="integration-item">
+                                            <span class="integration-icon" aria-hidden="true">
+                                                <img src="@Base64Utility.ConvertFileToBase64(integration.GetRelativePath(integration.DisplayIcon))" class="unselectable" />
+                                            </span>
+                                            <span class="integration-name">
+                                                @integration.DisplayName
+                                            </span>
+                                            <span class="integration-version">
+                                                <i>Version</i> @integration.Version
+                                            </span>
+                                            <span class="flex-grow-1"></span>
+                                            <span>
+                                                @{var canDeleteIntegration = modService.CanDeleteIntegration(integration);}
+                                                <button class="btn btn-delete" title="@(canDeleteIntegration ? "" : "Integration has active mods, please uninstall/remove all mods to delete")" disabled="@(!canDeleteIntegration)" @onclick="() => TryDeleteIntegration(integration)"></button>
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            @if (activeTab != SettingsTab.AllIntegrations)
+                            {
+                                <div class="settings-save">
+                                    <button @onclick="SaveSettings" disabled="@SaveButtonDisabled()" class="btn btn-primary grey">Save</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public SettingsDialogConfig Config { get; set; }
+    [Parameter] public EventCallback<Continuum.Core.Models.GameIntegration> OnIntegrationRemoved { get; set; }
+    [Parameter] public EventCallback OnIntegrationAdded { get; set; }
+
+    bool showLoadingIcon = false;
+    ElementReference inputTypeFileElement = new ElementReference();
+    protected SettingsTab activeTab = SettingsTab.Application;
+    bool enableSave = false;
+    GameIntegration integration;
+
+    int loadingRefreshTime = 100;
+
+    private ModSettingCategoryDTO[] integrationSettings;
+    private ModSettingCategoryDTO[] applicationSettings;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+
+        this.activeTab = Config.defaultTab;
+
+        if (queryStrings.TryGetValue("integration", out var integrationID))
+        {
+            this.integration = modService.AvailableIntegrations.FirstOrDefault(i => i.IntegrationID.Equals(integrationID, StringComparison.InvariantCultureIgnoreCase));
+        }
+        else
+        {
+            if (activeTab == SettingsTab.Integration)
+                activeTab = SettingsTab.AllIntegrations;
+        }
+
+        integrationSettings = GetIntegrationSettingsDTO();
+        applicationSettings = GetApplicationSettingsDTO();
+    }
+
+    ModSettingCategoryDTO[] GetIntegrationSettingsDTO()
+    {
+        if (integration != null)
+        {
+            var settingsList = new List<ModSettingCategoryDTO>();
+
+            foreach (var category in integration.Settings)
+            {
+                var integrationSettings = modService.Settings.GetIntegration(integration.IntegrationID);
+                var settingsDTO = category.Settings.Select(s => new ModSettingDTO(s, integrationSettings.GetSetting(s.SettingID).Value, IsLocked(s))).ToArray();
+                settingsList.Add(new ModSettingCategoryDTO(category.Category, settingsDTO));
+            }
+
+            return settingsList.ToArray();
+        }
+
+        return null;
+    }
+
+    bool IsLocked(ModSetting setting)
+    {
+        if (this.integration == null)
+            return false;
+
+        if (setting.SettingID.Equals("install-path", StringComparison.InvariantCultureIgnoreCase))
+        {
+            var integrationSettings = modService.Settings.GetIntegration(integration.IntegrationID);
+            modService.GetModInfoForIntegration(integration, out int available, out int installed);
+
+            return integrationSettings.SetUpApplied || installed > 0;
+        }
+
+        return false;
+    }
+
+    ModSettingCategoryDTO[] GetApplicationSettingsDTO()
+    {
+        var themeSetting = new ModSetting()
+        {
+            SettingID = "application.theme",
+            SettingName = "Theme",
+            Type = ModSettingType.DropDown,
+            Validations = new[] { new MandatoryFieldValidator() { ErrorMessage = "Theme is a required field" } },
+            Options = new[]
+            {
+                new ModSettingOption() { Text = "Dark", Value = "dark" }
+            }
+        };
+
+        // Populate DTOs
+        var categoryList = new List<ModSettingCategoryDTO>();
+        var categories = new[] { "General" };
+
+        foreach (var category in categories)
+        {
+            var settingList = new List<ModSettingDTO>();
+
+            switch (category)
+            {
+                case "General":
+                    settingList.Add(new ModSettingDTO(themeSetting, modService.Settings.ApplicationSettings.Theme));
+                    break;
+            }
+
+            categoryList.Add(new ModSettingCategoryDTO(category, settingList.ToArray()));
+        }
+
+        return categoryList.ToArray();
+    }
+
+    void SaveSettings()
+    {
+        if (integration != null)
+        {
+            foreach (var category in integrationSettings)
+            {
+                foreach (var setting in category.Settings)
+                {
+                    var integrationSettings = modService.Settings.GetIntegration(integration.IntegrationID);
+                    var settingData = integrationSettings.GetSetting(setting.SettingID);
+                    settingData.Value = setting.Value;
+                }
+            }
+        }
+
+        modService.Settings.ApplicationSettings.Theme = (string)FindSetting(applicationSettings, "application.theme").Value;
+        modService.SaveSettings();
+
+        enableSave = false;
+    }
+
+    ModSettingDTO FindSetting(IEnumerable<ModSettingCategoryDTO> settingList, string settingID)
+    {
+        foreach (var category in settingList)
+        {
+            var setting = category.Settings.FirstOrDefault(s => s.SettingID == settingID);
+
+            if (setting != null)
+                return setting;
+        }
+
+        return null;
+    }
+
+    string GetActiveClass(SettingsTab currentTab)
+    {
+        return activeTab == currentTab ? "active" : string.Empty;
+    }
+
+    bool SaveButtonDisabled()
+    {
+        return !enableSave || (integrationSettings?.SelectMany(c => c.Settings).Any(s => !s.IsValid) ?? false) || applicationSettings.SelectMany(c => c.Settings).Any(s => !s.IsValid);
+    }
+
+    protected async void RouteCloseAction()
+    {
+        if (enableSave)
+        {
+            dialogService.ShowConfirmDialog(
+                title: "Unsaved Changes",
+                message: "You have unsaved changes, are you sure you want to close this menu?",
+                level: AlertLevel.Warning,
+                cancelAction: async () => { await Close(); },
+                cancelText: "Close",
+                confirmText: "Go Back",
+                confirmAction: null
+            );
+        }
+        else
+        {
+            await Close();
+        }
+    }
+
+    protected async Task Close()
+    {
+        toastService.ReloadPersistentToastPopups();
+        await Config.onClose.InvokeSafe();
+    }
+
+    protected void TryDeleteIntegration(GameIntegration integration)
+    {
+        dialogService.ShowConfirmDialog(
+            title: "Remove integration?",
+            message: "Are you sure you wish to remove this integration?",
+            cancelText: "Cancel",
+            confirmText: "Remove",
+            level: AlertLevel.Warning,
+            confirmAction: async () =>
+            {
+                var loadingContext = new Continuum.Core.ProgressTracker();
+                var dialog = dialogService.ShowLoadingDialog(
+                    title: "Removing game files",
+                    progressTracker: loadingContext,
+                    refreshTime: loadingRefreshTime
+                );
+
+                var status = await modService.RemoveSetUp(integration, loadingContext);
+                dialogService.Remove(dialog); // Remove the loading icon
+
+                if (status == Services.ModSetUpStatus.SetUpFailed)
+                {
+                    dialogService.ShowAlertDialog(
+                        title: "Oops, Something went wrong!",
+                        message: "Something went wrong during removal of integration set-up files",
+                        level: AlertLevel.Error
+                    );
+                }
+                else
+                {
+                    showLoadingIcon = true;
+
+                    modService.DeleteIntegration(integration);
+                    await OnIntegrationRemoved.InvokeAsync(integration);
+
+                    showLoadingIcon = false;
+                }
+            }
+        );
+    }
+
+    async Task ReadFile()
+    {
+        showLoadingIcon = true;
+        await StateHasChangedAsync();
+
+        Tewr.Blazor.FileReader.IFileReference fileReference = null;
+        Tewr.Blazor.FileReader.IFileReaderRef fileReader = fileReaderService.CreateReference(inputTypeFileElement);
+
+        foreach (var file in await fileReader.EnumerateFilesAsync())
+        {
+            fileReference = file;
+            break;
+        }
+
+        if (fileReference == null)
+            return;
+
+        byte[] fileBytes;
+        string fileName;
+
+        using (MemoryStream memoryStream = await fileReference.CreateMemoryStreamAsync(4096))
+        {
+            fileBytes = memoryStream.ToArray();
+            fileName = (await fileReference.ReadFileInfoAsync()).Name;
+        }
+
+        var result = modService.TryAddIntegration(fileName, fileBytes);
+        var errorMessage = result.loadErrors.FirstOrDefault() ?? "An unknown error occurred";
+
+        if (result.status != LoadStatus.Success)
+        {
+            dialogService.ShowAlertDialog(
+                title: "Unable to load integration",
+                message: errorMessage,
+                level: AlertLevel.Error
+            );
+        }
+
+        // Make sure to reset this...
+        await fileReader.ClearValue();
+
+        showLoadingIcon = false;
+        await StateHasChangedAsync();
+
+        await OnIntegrationAdded.InvokeAsync(null);
+    }
+
+    private async Task StateHasChangedAsync()
+    {
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+}

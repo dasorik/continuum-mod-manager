@@ -1,0 +1,29 @@
+﻿<div class="alert @GetClass()">
+    <span class="icon @GetClass()"></span>
+    <span>@Message</span>
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public AlertLevel Type { get; set; } = AlertLevel.Info;
+    [Parameter] public string Message { get; set; } = "";
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    string GetClass()
+    {
+        switch (Type)
+        {
+            case AlertLevel.Info:
+                return "alert-info";
+            case AlertLevel.Success:
+                return "alert-success";
+            case AlertLevel.Warning:
+                return "alert-warning";
+            case AlertLevel.Error:
+                return "alert-danger";
+            default:
+                return "alert-info";
+        }
+    }
+}

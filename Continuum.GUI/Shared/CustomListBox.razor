@@ -1,0 +1,104 @@
+﻿
+<div class="custom-select-wrapper">
+    <div class="custom-select @(isOpen ? "open" : string.Empty)">
+        <div @onclick="Click">
+            <span class="icon"><img src="@selectedIcon" /></span>
+            <span class="text">@selectedText</span>
+        </div>
+        <div class="custom-options">
+            <div>
+                <input type="text" placeholder="Search" @bind-value="SearchText" @bind-value:event="oninput" />
+            </div>
+            <CascadingValue Value="@this">
+                @ChildContent
+            </CascadingValue>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string SelectedValue
+    {
+        get => selectedValue;
+        set => SetValue(value);
+    }
+
+    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private List<CustomListBoxItem> children = new List<CustomListBoxItem>();
+    private string selectedValue { get; set; }
+    private string selectedText { get; set; }
+    private string selectedIcon { get; set; }
+    private bool isOpen = false;
+
+    public string SearchText
+    {
+        get => searchText;
+        set { searchText = value; FilterList(); }
+    }
+    private string searchText = "";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            SetValue(SelectedValue);
+            this.StateHasChanged();
+        }
+    }
+
+    protected void Click()
+    {
+        isOpen = !isOpen;
+        this.StateHasChanged();
+    }
+
+    public void Register(CustomListBoxItem value)
+    {
+        children.Add(value);
+    }
+
+    public void Unregister(CustomListBoxItem value)
+    {
+        children.Remove(value);
+    }
+
+    private void SetValue(string value)
+    {
+        this.selectedValue = value;
+        var node = children.FirstOrDefault(n => n.Value == value);
+
+        if (node != null)
+            UpdateState(node);
+    }
+
+    private void UpdateState(CustomListBoxItem value)
+    {
+        this.selectedValue = value.Value;
+        this.selectedText = value.Text;
+        this.selectedIcon = value.Icon;
+    }
+
+    public void UpdateValueAndClose(string value)
+    {
+        SetValue(value);
+        this.SelectedValueChanged.InvokeAsync(selectedValue);
+
+        this.isOpen = false;
+        this.StateHasChanged();
+    }
+
+    protected void FilterList()
+    {
+        bool hasFilter = !string.IsNullOrWhiteSpace(searchText);
+
+        foreach (var child in children)
+        {
+            bool canShow = !hasFilter || child.Text.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
+            child.Visible(canShow);
+        }
+    }
+}

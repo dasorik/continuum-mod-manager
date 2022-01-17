@@ -1,0 +1,51 @@
+﻿@using Continuum.Common.Utilities;
+@using Continuum.Core.Models;
+
+<div id="mod-button-@Mod.ModID" class="mod-icon-parent mod @GetSelectedStyle()" @onclick="@RouteMainAction">
+    <div class="mod-icon mod @(Installed ? string.Empty : "disabled")">
+        @{var path = Mod.GetRelativePath(Mod.DisplayImage);}
+        <img src="@Base64Utility.ConvertFileToBase64(path)" class="vertical-align unselectable" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(IconPath))
+    {
+        <div class="icon">
+            <img src="@Base64Utility.ConvertFileToBase64(IconPath)" class="unselectable" />
+        </div>
+    }
+
+    @if (MultiSelectEnabled)
+    {
+        <div class="checkbox @GetSelectedStyle()" @onclick:stopPropagation="true" @onclick="@RouteCheckboxAction"></div>
+    }
+
+    <div class="button-title-banner">
+        <span class="button-title">@Mod.DisplayName</span>
+        <span class="button-author">by @(Mod.Author.Name ?? "Unknown")</span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Continuum.Core.Models.ModConfiguration Mod { get; set; }
+    [Parameter] public string IconPath { get; set; }
+    [Parameter] public bool Installed { get; set; }
+    [Parameter] public bool MultiSelectEnabled { get; set; }
+    [Parameter] public bool Selected { get; set; }
+    [Parameter] public EventCallback<Continuum.Core.Models.ModConfiguration> OnClick { get; set; }
+    [Parameter] public EventCallback<Continuum.Core.Models.ModConfiguration> OnCheckboxClick { get; set; }
+
+    protected async void RouteMainAction()
+    {
+        await OnClick.InvokeAsync(Mod);
+    }
+
+    protected async void RouteCheckboxAction()
+    {
+        await OnCheckboxClick.InvokeAsync(Mod);
+    }
+
+    protected string GetSelectedStyle()
+    {
+        return Selected ? "selected" : "show-on-hover";
+    }
+}

@@ -1,0 +1,180 @@
+﻿@inherits LayoutComponentBase
+@implements IDisposable
+
+@using Microsoft.JSInterop;
+@using ElectronNET.API;
+@using Continuum.Core.Enums;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject IJSRuntime runtime
+@inject Continuum.GUI.Services.ModService modService;
+@inject Continuum.GUI.Services.ToastService toastService;
+@inject Continuum.GUI.Services.DialogService dialogService;
+@inject NavigationManager navigationManager
+
+<div class="drag-region">
+    <div class="window-functions">
+        <button id="minimize-button" @onclick="() => MinimizeApplication()"></button>
+        <button id="maximize-button" @onclick="async () => await MaximizeApplication()"></button>
+        <button id="exit-button" @onclick="() => CloseApplication()"></button>
+    </div>
+</div>
+
+@if (dialogService.IsCurrentContext(out LoadingDialogConfig loadingConfig))
+{
+    <PopupLoading Config="loadingConfig" />
+}
+else if (dialogService.IsCurrentContext(out ConfirmationDialogConfig confirmConfig))
+{
+    <PopupConfirm Config="confirmConfig" />
+}
+else if (dialogService.IsCurrentContext(out AlertDialogConfig alertConfig))
+{
+    <PopupAlert Config="alertConfig" />
+}
+else if (dialogService.IsCurrentContext(out SettingsDialogConfig settingsConfig))
+{
+    <Settings Config="settingsConfig" OnIntegrationRemoved="OnIntegrationRemoved" OnIntegrationAdded="OnIntegrationAdded" />
+}
+else if (dialogService.IsCurrentContext(out ModDetailsConfig detailsConfig))
+{
+    <PopupModDetails Config="detailsConfig" />
+}
+
+<div class="main-content-layout">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="content px-4">
+            <ToastContainer>
+                @foreach (var toast in toastService.ToastList)
+                {
+                    var toastCache = toast;
+                    <Toast Message="@toast.message" Type="@toast.level" ContextButtonAction="@toast.contextButton?.action" ContextButtonName="@toast.contextButton?.text" CanClose="@toast.canClose" OnClose="() => toastService.RemoveToast(toastCache)"></Toast>
+                }
+            </ToastContainer>
+
+            @Body
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        toastService.OnToastsChanged += QueueStateChange;
+        dialogService.OnDialogChanged += QueueStateChange;
+        navigationManager.LocationChanged += ReloadToastEntries;
+    }
+
+    void IDisposable.Dispose()
+    {
+        toastService.OnToastsChanged -= QueueStateChange;
+        dialogService.OnDialogChanged -= QueueStateChange;
+        navigationManager.LocationChanged -= ReloadToastEntries;
+    }
+
+    void ReloadToastEntries(object sender, LocationChangedEventArgs args)
+    {
+        toastService.ReloadPersistentToastPopups();
+    }
+
+    void QueueStateChange()
+    {
+        StateHasChanged();
+    }
+
+    void MinimizeApplication()
+    {
+        var window = Electron.WindowManager.BrowserWindows.FirstOrDefault();
+        window?.Minimize();
+    }
+
+    async Task MaximizeApplication()
+    {
+        var window = Electron.WindowManager.BrowserWindows.FirstOrDefault();
+
+        if (window != null)
+        {
+            bool isMaximized = await window.IsMaximizedAsync();
+
+            if (isMaximized)
+                Electron.WindowManager.BrowserWindows.FirstOrDefault()?.Unmaximize();
+            else
+                Electron.WindowManager.BrowserWindows.FirstOrDefault()?.Maximize();
+        }
+    }
+
+    void CloseApplication()
+    {
+        Electron.App.Quit();
+    }
+
+    protected override void OnParametersSet()
+    {
+        toastService.ReloadPersistentToastPopups();
+        CheckForFailedModAndIntegrationLoads();
+    }
+
+    void CheckForFailedModAndIntegrationLoads()
+    {
+        // Don't show if we've already shown
+        if (modService.modLoadWarningShown)
+            return;
+
+        var failedModLoads = modService.ModLoadResults.Where(r => !(new[] { LoadStatus.Success }.Contains(r.status)));
+        var failedIntegrationLoads = modService.IntegerationLoadResults.Where(r => !(new[] { LoadStatus.Success }.Contains(r.status)));
+
+        if (failedModLoads.Count() > 0)
+        {
+            string modFailText = failedModLoads.Count() > 0 ? $"{failedModLoads.Count()} mod{(failedModLoads.Count() > 1 ? "s" : string.Empty)}" : string.Empty;
+
+            toastService.AddToast(new ToastData()
+            {
+                message = $"{modFailText} failed to load (check logs for details)",
+                canClose = true,
+                level = AlertLevel.Error
+            });
+        }
+
+        if (failedIntegrationLoads.Count() > 0)
+        {
+            string integrationFailText = failedIntegrationLoads.Count() > 0 ? $"{failedIntegrationLoads.Count()} integration{(failedIntegrationLoads.Count() > 1 ? "s" : string.Empty)}" : string.Empty;
+
+            toastService.AddToast(new ToastData()
+            {
+                message = $"{integrationFailText} failed to load (check logs for details)",
+                canClose = true,
+                level = AlertLevel.Error
+            });
+        }
+
+        modService.modLoadWarningShown = true;
+    }
+
+    void OnIntegrationRemoved(Continuum.Core.Models.GameIntegration integration)
+    {
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+
+        if (queryStrings.TryGetValue("integration", out var integrationID))
+        {
+            if (integration.IntegrationID.Equals(integrationID, StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Fail-safe in case we delete the active integration
+                navigationManager.NavigateTo("integrations");
+            }
+        }
+
+        navigationManager.NavigateTo("integrations");
+    }
+
+    void OnIntegrationAdded()
+    {
+        navigationManager.NavigateTo("integrations");
+    }
+}
