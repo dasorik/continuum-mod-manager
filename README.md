@@ -19,7 +19,9 @@ You can download the latest releases automatically via the installer on the [rel
 Want to chat, or need some help? Feel free to join us over on the [Continuum Mod Manager Discord](https://discord.gg/VbSBYYRA5y). From here you'll also be able to discover mods and integrations made by members of the community.
 
 ## ⚙️ Making Mods / Integrations
-🚧 *Documation about creating mods and integrations is under construction, please check back soon!* 🚧
+Please see page [Creating Mods](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingMods.md) for details about how to create mods
+
+🚧 *Documation about creating integrations is under construction, please check back soon!* 🚧
 
 ## 🙋‍♀️🙋‍♂ Contributing
 Please feel free to submit a pull request if you find any bugs (A list of the active isues can be located [here](https://github.com/dasorik/continuum-mod-manager/issues)).
