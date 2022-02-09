@@ -1,4 +1,5 @@
-# 🎮 Continuum Mod Manager
+
+![Continuum_Banner_Alt](https://user-images.githubusercontent.com/42689736/153178817-794bb6df-06eb-4c9c-aa39-206d4e8e8bb7.png)
 
 Continuum Mod Manager is a game agnostic mod manager and modification engine that allowings users to install/uninstall mods that either they or other users have authored. Built from the ground up to allow for modding support of any game, Continuum's aims is to allow modders to easily share their creations with others.
 
@@ -40,7 +41,7 @@ electronize start
 ## 📑 License
 Continuum Mod Manager is licensed under the [GNU General Public License v3.0](https://github.com/dasorik/continuum-mod-manager/blob/main/LICENSE).
 
-> As an aside to this (but not covered in the license above) if you choose to include Continuum.Core in your application we would kindly request that you include the text *'Powered By Continuum'* accompanied by the Continuum logo somewhere in your app.<br><br>Please also drop us a message to let us know about your projects incorperating Continuum, we'd love to hear about them!
+> As an aside to this (but not covered in the license above) if you choose to include Continuum.Core in your application we would kindly request that you include a variation of the logo below somewhere in your app.<br><br><img src="https://user-images.githubusercontent.com/42689736/153181047-3cd95841-abe8-4d72-946a-492260e2afe3.svg" width="200" height="56"><br><br>Please also drop us a message to let us know about your projects incorperating Continuum, we'd love to hear about them!
 
 ## 📜 Additional Credits
 This mod tool uses external tools, with attributions below:
