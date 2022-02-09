@@ -28,9 +28,9 @@ The `config.json` file should contain the following properties
 | DisplayImage | String | The file path (relative to the root of the mod files) of the image to display fof the mod. This image should be at least 512x512 pixels (or multiples of) in size |
 | DisplayBackground | String | The file path (relative to the root of the mod files) of the large background image to display on the details page of the mod |
 | Description | String | Outlines any information users need to know about the mod. Can use very limited markdown in this description (Use '#' at the start of a line for a header, and '\n' for a new-line) |
-| LinkedIntegrations | [LinkedIntegration](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/LinkedIntegration.md)[] | A list of integrations that the mod is linked to (and the versions of the integration it is available for). See 'Linked Integrations' below for details. |
-| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). See section 'Mod Settings' below for details. |
-| InstallActions | [InstallAction](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md)[] | A list of installation actions that the mod will execute when being installed. See section 'Mod Install Actions' below for details on valid action definitions |
+| LinkedIntegrations | [LinkedIntegration](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/LinkedIntegration.md)[] | A list of integrations that the mod is linked to (and the versions of the integration it is available for). |
+| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). |
+| InstallActions | [InstallAction](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md)[] | A list of installation actions that the mod will execute when being installed. |
 
 The end result of a config file will look similar to the example below:
 
