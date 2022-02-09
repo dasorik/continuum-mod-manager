@@ -13,15 +13,15 @@ Continuum Mod Manager is a game agnostic mod manager and modification engine tha
   * In addition to the graphical mod manager interface, Continuum also features a rich file modiication engine. *Continuum.Core* is a standalone modification library which acts as the backbone for Continuum's mod installation. Continuum.Core can be integrated into any .NET application, allowing for other applications to make use of it's features.
 
 ## 📦 Download
-You can download the latest releases automatically via the installer on the [releases](https://github.com/dasorik/continuum-mod-manager/releases) page.
+You can download the latest releases automatically via the installer on the [Releases](https://github.com/dasorik/continuum-mod-manager/releases) page.
 
 ## 💬 Let's Chat
-Want to chat, or need some help? Feel free to join us over on the [Continuum Mod Manager Discord](https://discord.gg/VbSBYYRA5y). From here you'll also be able to discover mods and integrations made by members of the community.
+Want to chat, or need some help? Feel free to join us over on the [Continuum Mod Manager Discord](https://discord.gg/VbSBYYRA5y). From here you'll also be able to discover mods and integrations lovingly handcrafted by members of the community.
 
 ## ⚙️ Making Mods / Integrations
-Please see page [Creating Mods](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingMods.md) for details about how to create mods
-
-🚧 *Documation about creating integrations is under construction, please check back soon!* 🚧
+Want to get started making mods with Continuum? Or perhaps you'd like to add support to Continuum for your favourite game!
+* [Creating Mods](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingMods.md)
+* [Creating Game Integrations](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingIntegrations.md)
 
 ## 🙋‍♀️🙋‍♂ Contributing
 Please feel free to submit a pull request if you find any bugs (A list of the active isues can be located [here](https://github.com/dasorik/continuum-mod-manager/issues)).
@@ -37,13 +37,10 @@ For development builds run:
 cd Continuum.GUI
 electronize start
 ````
-
 ## 📑 License
 Continuum Mod Manager is licensed under the [GNU General Public License v3.0](https://github.com/dasorik/continuum-mod-manager/blob/main/LICENSE).
 
-As an aside to this (but not covered in the license above) if you choose to include Continuum.Core in your application we would kindly request that you include the text *'Powered By Continuum'* accompanied by the Continuum logo somewhere in your app.
-
-Please also drop us a message to let us know about your projects incorperating Continuum, we'd love to hear about them!
+> As an aside to this (but not covered in the license above) if you choose to include Continuum.Core in your application we would kindly request that you include the text *'Powered By Continuum'* accompanied by the Continuum logo somewhere in your app.<br><br>Please also drop us a message to let us know about your projects incorperating Continuum, we'd love to hear about them!
 
 ## 📜 Additional Credits
 This mod tool uses external tools, with attributions below:
