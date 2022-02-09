@@ -139,9 +139,9 @@ This action writes content/data to different files
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | TargetFile | String | The file path of the file that will be written to. |
-| Content | WriteContent[] | An array of write commands to be applied to the file (See below for write command definitions) |
+| Content | [WriteContent](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md#write-content)[] | An array of write commands to be applied to the file (See below for write command definitions) |
 
-### WriteContent
+### Write Content
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | StartOffset | Long | The starting byte offset of the file to start writing content |
