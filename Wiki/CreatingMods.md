@@ -1,4 +1,6 @@
 # Creating Mods
+A mod in continuum is represented as a configuration file containing a series of installation steps and other resources. During installation, the installation actions that are defined will be run in a specialized sequence (not always the order that they are defined in), altering the host game's files. As continuum tracks all file modifications, these mods can also be uninstalled by restoring file deltas that were captured during the installation process.
+
 A mod file structure typically looks like the following:
 
 `{mod-name}.mod`<br>
