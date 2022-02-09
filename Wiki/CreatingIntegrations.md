@@ -25,7 +25,8 @@ The `config.json` file should contain the following properties
 | IntegrationID | String | Defines the unique integration ID (must be globally unique), and should reflect the game the integration is being build for. eg. `"example_game_name"`. Can only contain alpha-numeric characters and '-', '.' or '\_'. |
 | Version | String | Use this to track the current version of the integration, If making new verions of an integration, ensure that any breaking changes increment the `{major}` version, while smaller non-breaking changes can just increment the `{minor}` version |
 | DisplayName | String | The name of the integration, as shown in the UI |
-| DisplayImage | String | The file path (relative to the root of the integration's files) of the image to display fof the mod. This image should be at least 200x260 pixels (or multiples of) in size |
+| DisplayImage | String | The file path (relative to the root of the integration's files) of the image to display for the mod. This image should be at least 200x260 pixels (or multiples of) in size |
+| DisplayIcon | String | The file path (relative to the root of the integration's files) of the icon image to display for this mod (as shown in the settings/navigation bar). This image should be at least 36x36 pixels (or multiples of) in size |
 | Author | [Contributor](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Contributor.md) | This defines the primary author of the integration, only one primary author can be defined, other authors must be placed under 'Contributors' |
 | Contributors | [Contributor](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Contributor.md)[] | A list of additional contributors/authors of the integration. |
 | DisplayIcon | String | The file path (relative to the root of the integration's files) of the icon displayed in both the settings menu, and the back icon of the main mods page (when the integration is selected) |
