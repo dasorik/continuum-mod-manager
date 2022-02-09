@@ -25,7 +25,7 @@ The `config.json` file should contain the following properties
 | DisplayName | String | The name of the mod, as shown in the UI |
 | Author | [Contributor](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Contributor.md) | This defines the primary author of the mod, only one primary author can be defined, other authors must be placed under 'Contributors' |
 | Contributors | [Contributor](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Contributor.md)[] | A list of additional contributors/authors of the mod. |
-| DisplayImage | String | The file path (relative to the root of the mod files) of the image to display fof the mod. This image should be at least 512x512 pixels (or multiples of) in size |
+| DisplayImage | String | The file path (relative to the root of the mod files) of the image to display fof the mod. This image should be at least 200x200 pixels (or multiples of) in size |
 | DisplayBackground | String | The file path (relative to the root of the mod files) of the large background image to display on the details page of the mod |
 | Description | String | Outlines any information users need to know about the mod. Can use very limited markdown in this description (Use '#' at the start of a line for a header, and '\n' for a new-line) |
 | LinkedIntegrations | [LinkedIntegration](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/LinkedIntegration.md)[] | A list of integrations that the mod is linked to (and the versions of the integration it is available for). |
