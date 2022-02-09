@@ -5,7 +5,7 @@ Mods can define settings that can be used to alter the mod installation process.
 | Property  | Type | Description |
 | :--- | :--- | :--- |
 | Category | String | The settings category group name |
-| Settings | Setting[] | A list of settings that can be configured on the mod prior to installing |
+| Settings | [Setting](https://github.com/dasorik/continuum-mod-manager/edit/main/Wiki/Settings.md#setting)[] | A list of settings that can be configured on the mod prior to installing |
 
 ## Setting
 | Property  | Type | Description |
@@ -15,8 +15,8 @@ Mods can define settings that can be used to alter the mod installation process.
 | Description | String | Tool-tip text that is shown on hover (providing additional detail on what the setting does) |
 | Type | SettingType | Defines which control is used for this setting. Must be either `Text`, `Checkbox` or `Dropdown` |
 | DefaultValue | Object | Defines the default state of the settings that will be applied on first load (ie. for a checkbox -> `true`) |
-| Validations | SettingValidator[] | (Only applicable for 'Text' settings) A list of validators that will be executed against the value of the textbox. Mods cannot be installed if any of thier settings are triggering one or more of the validators assigned to a setting. Validators are detailed further below. |
-| Options | SettingValidator[] | (Only applicable for 'Dropdown' settings) A list of 'Text'/'Value' pairs that are used to define the list of available drop down options that can be selected from |
+| Validations | [SettingValidator](https://github.com/dasorik/continuum-mod-manager/edit/main/Wiki/Settings.md#setting-validators)[] | (Only applicable for 'Text' settings) A list of validators that will be executed against the value of the textbox. Mods cannot be installed if any of thier settings are triggering one or more of the validators assigned to a setting. Validators are detailed further below. |
+| Options | [SettingOption](https://github.com/dasorik/continuum-mod-manager/edit/main/Wiki/Settings.md#setting-option)[] | (Only applicable for 'Dropdown' settings) A list of 'Text'/'Value' pairs that are used to define the list of available drop down options that can be selected from |
 
 Example
 ```json
@@ -91,4 +91,31 @@ Example
     }
   ]
 },
+```
+
+## Setting Option
+| Property  | Type | Description |
+| :--- | :--- | :--- |
+| Text | String | The textual name of the option, shown in the UI |
+| Value | String | The value of the setting (this is the value when referencing via `$MOD.setting-name`) |
+
+Example
+```json
+{
+  "SettingID": "replace-icon-type",
+  "SettingName": "Replacement Icon Type",
+  "Description": "Defines which icon will be used to replace the character icon",
+  "Type": "Dropdown",
+  "DefaultValue": "icon_2",
+  "Options": [
+    {
+      "Text": "Icon #1",
+      "Value": "icon_1"
+    },
+    {
+      "Text": "Icon #2",
+      "Value": "icon_2"
+    }
+  ]
+}
 ```
