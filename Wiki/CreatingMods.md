@@ -8,7 +8,7 @@ A mod file structure typically looks like the following:
 └─ `resources\`<br>
 ┈ ┈ └─ `{any files placed here can be access via the [Mod] relative path}`
 
-The `config.json` file must be present in the mods root folder, if this file is not present Continuum will reject adding the mod. The `portrait.png` and `background.png` files on the otherhand can be named anything (and can also be select other file formats), but it is good practice to stick to a consistent naming convention.
+The `config.json` file must be present in the mod's root folder, if this file is not present Continuum will reject adding the mod. The `portrait.png` and `background.png` files on the otherhand can be named anything (and can also be select other file formats), but it is good practice to stick to a consistent naming convention.
 
 Files located within the `resources` can be referenced and used during the mod installation process. Use the path prefix '[Mod]' to reference any files that are placed inside the `resources` folder.
 
@@ -24,7 +24,7 @@ The `config.json` file should contain the following properties
 | Author | ModContributor | This defines the primary author of the mod, only one primary author can be defined, other authors must be placed under 'Contributors' |
 | Contributors | ModContributor[] | A list of additional contributors/authors of the mod. |
 | DisplayImage | String | The file path (relative to the root of the mod files) of the image to display fof the mod. This image should be at least 512x512 pixels (or multiples of) in size |
-| DisplayBackground | String[] | The file path (relative to the root of the mod files) of the large background image to display on the details page of the mod |
+| DisplayBackground | String | The file path (relative to the root of the mod files) of the large background image to display on the details page of the mod |
 | Description | String | Outlines any information users need to know about the mod. Can use very limited markdown in this description (Use '#' at the start of a line for a header, and '\n' for a new-line) |
 | LinkedIntegrations | LinkedIntegration[] | A list of integrations that the mod is linked to (and the versions of the integration it is available for). See 'Linked Integrations' below for details. |
 | Settings | ModSettingCategory[] | A list of settings categories (used to group mod settings). See section 'Mod Settings' below for details. |
