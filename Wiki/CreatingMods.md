@@ -6,7 +6,7 @@ A mod file structure typically looks like the following:
 `{mod-name}.mod`<br>
 ┣ `config.json` *(mandatory)*<br>
 ┣ `portait.png`<br>
-┣ `icon.png`<br>
+┣ `background.png`<br>
 ┗ `resources\`<br>
 &nbsp; ┗ `{any files placed here can be access via the [Integration] relative path}`
 
