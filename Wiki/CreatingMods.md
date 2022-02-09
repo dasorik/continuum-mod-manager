@@ -2,11 +2,11 @@
 A mod file structure typically looks like the following:
 
 `{mod-name}.mod`<br>
-┠─ `config.json` *(mandatory)*<br>
-┠─ `portait.png`<br>
-┠─ `background.png`<br>
-└─ `resources\`<br>
-┈ ┈ └─ `{any files placed here can be access via the [Mod] relative path}`
+┣ `config.json` *(mandatory)*<br>
+┣ `portait.png`<br>
+┣ `icon.png`<br>
+┗ `resources\`<br>
+&nbsp; ┗ `{any files placed here can be access via the [Integration] relative path}`
 
 The `config.json` file must be present in the mod's root folder, if this file is not present Continuum will reject adding the mod. The `portrait.png` and `background.png` files on the otherhand can be named anything (and can also be select other file formats), but it is good practice to stick to a consistent naming convention.
 
