@@ -32,6 +32,8 @@ The `config.json` file should contain the following properties
 | Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). |
 | InstallActions | [InstallAction](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md)[] | A list of installation actions that the mod will execute when being installed. |
 
+
+## Example
 The end result of a config file will look similar to the example below:
 
 ```json
