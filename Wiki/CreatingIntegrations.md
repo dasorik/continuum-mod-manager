@@ -30,12 +30,12 @@ The `config.json` file should contain the following properties
 | ModCompatibilityVersion | String | If an integration is updated (and it's major version increased), but it can still support mods created for an older version of the integration, then this should be set to the earliest version of the integration that supported those mods. <br><br> ie. The mod version is now at version `v3.0`, but mods created and targeting `v1.0` are still supported. The `ModCompatibilityVersion` should be set to `"1.0"` |
 | TargetApplicationVersion | String | The targeted Continuum application version (in {major}.{minor} format). Can either be a specfic (exact) version (ie. `"2.5"`), or a wildcard (ie. `"2.\*"`, to support all `2.X` versions of the integration - wildcards can only be applied to minor versions). Applications versions higher than this version will only support the integration if the `ApplicationCompatibilityVersion` is less than or equal to `TargetApplicationVersion` or the `MinimumApplicationVersion` |
 | MinimumApplicationVersion | String | The minimum compatible application (in {major}.{minor} format) that this integration is supported in. Can either be a specfic (exact) version (ie. `"2.5"`), or a wildcard (ie. `"2.\*"`, to target all `2.X` versions of the integration - wildcards can only be applied to minor versions). If left blank, the minimum version will be assumed to the the `TargetApplicationVersion`. |
-| QuickBMSScript | String | TODO... |
+| QuickBMSScript | String | The file path (relative to the root of the integration's files) where the QuickBMS script needed to extract the game's specific files is located. If needing to use QuickBMS for mods, ensure that this is defined |
 | SetUpActions | [ModInstallAction](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md)[] | A list of installation actions that the integration will execute prior to allowing mods to be installed. Use this to set up the game files so that they are ready for modding (once uninstalling the integration, these changes will be reverted/uninstalled). See section 'Mod Install Actions' below for details on valid action definitions |
-| QuickBMSAutomapping | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | TODO... |
-| UnzipAutoMappings | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | TODO... |
-| Categories | [ModCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingIntegrations.md#mod-category)[] | TODO... |
-| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | TODO... |
+| QuickBMSAutomapping | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after QuickBMS extract |
+| UnzipAutoMappings | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after zip extract |
+| Categories | [ModCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingIntegrations.md#mod-category)[] | Defines the list of categories that will be shown in the UI (allowing for filtering of mods by type). |
+| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). |
 
 ### Mod Category
 | Property | Type | Description |
@@ -44,8 +44,9 @@ The `config.json` file should contain the following properties
 | DisplayName | String | The name of the category as shown in the UI |
 | IconPath | String | The file path, relative to the root integration folder that the icon for this category is located (this should be inside of the `icons\` folder) |
 
+## Example
 The end result of a config file will look similar to the below
-```
+```json
 {
   "IntegrationID": "disney_infinity_3_0",
   "DisplayName": "Disney Infinity 3.0",
