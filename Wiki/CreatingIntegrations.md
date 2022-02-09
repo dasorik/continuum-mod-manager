@@ -37,7 +37,11 @@ The `config.json` file should contain the following properties
 | QuickBMSAutomapping | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after QuickBMS extract |
 | UnzipAutoMappings | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after zip extract |
 | Categories | [ModCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/CreatingIntegrations.md#mod-category)[] | Defines the list of categories that will be shown in the UI (allowing for filtering of mods by type). |
-| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). |
+| Settings | [SettingCategory](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Settings.md)[] | A list of settings categories (used to group mod settings). One of these settings must be named `install-path`, see below note for further details |
+
+<br>
+
+> ‼ Note: All game integrations must define the setting `install-path` (this can be placed under any setting category you wish). This directs the mod engine to where file modifications will take place. You can specify whatever validators you wish on this setting, but ideally this will include a `MandatoryField`, `PathExists` and `Regex` filter on the setting to ensure this is both a valid file path for the game in question.
 
 ### Mod Category
 | Property | Type | Description |
