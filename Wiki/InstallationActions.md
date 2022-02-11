@@ -185,7 +185,7 @@ Example
   "Action": "UnzipFile",
   "TargetFile": "[Game]\\assets\\main_config.zip",
   "DestinationPath": "[Game]\\assets\\main_config_extracted",
-  "UnzipAutomapping": false,
+  "UseAutomapping": false,
   "DeleteWhenComplete": true
 }
 ```
@@ -208,7 +208,7 @@ Example
     "[Game]\\assets\\secondary_config.zip"
   ]
   "ExtractToSameDirectory": false,
-  "UnzipAutomapping": false,
+  "UseAutomapping": false,
   "DeleteWhenComplete": true
 }
 ```
