@@ -1,4 +1,8 @@
 
+> ### ⚠️ NOTE You are currently looking at an experimental branch of Continuum Mod Manager. There is no guarantee that the features from this branch will be included in the main release. Please also be aware that experimental features may break compatibility with mods/integrations being used in the active release version.</span>
+
+<hr>
+
 ![Continuum_Banner_Alt](https://user-images.githubusercontent.com/42689736/153178817-794bb6df-06eb-4c9c-aa39-206d4e8e8bb7.png)
 
 Continuum Mod Manager is a game agnostic mod manager and modification engine that allowings users to install/uninstall mods that either they or other users have authored. Built from the ground up to allow for modding support of any game, Continuum's aims is to allow modders to easily share their creations with others.
