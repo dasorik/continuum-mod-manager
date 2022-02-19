@@ -2853,5 +2853,116 @@ namespace Continuum.Core.Test
 			Assert.AreEqual(1, result.Count());
 			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
+
+		#region QuickBMSExtractMode
+
+		[Test]
+		public void ValidQuickBMSExtractMode_RootFolder()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.RootFolder;
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+		}
+
+		[Test]
+		public void ValidQuickBMSExtractMode_NamedFolder()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.NamedFolder;
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+		}
+
+		[Test]
+		public void ValidQuickBMSExtractMode_StaticFolder()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.StaticFolder;
+			integration.QuickBMSExtractPath = "SampleFolder\\";
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+		}
+
+		[Test]
+		public void InvalidQuickBMSExtractMode_RootFolder()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.RootFolder;
+			integration.QuickBMSExtractPath = "SampleFolder\\";
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			Assert.AreEqual("A QuickBMS folder can only be supplied for QuickBMSFolderMode = 'StaticFolder'", result.First().loadErrors.First());
+		}
+
+		[Test]
+		public void InvalidQuickBMSExtractMode_NamedFolder()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.NamedFolder;
+			integration.QuickBMSExtractPath = "SampleFolder\\";
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			Assert.AreEqual("A QuickBMS folder can only be supplied for QuickBMSFolderMode = 'StaticFolder'", result.First().loadErrors.First());
+		}
+
+		[Test]
+		public void InvalidQuickBMSExtractMode_StaticFolder_Empty()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.StaticFolder;
+			integration.QuickBMSExtractPath = "";
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			Assert.AreEqual("A QuickBMS folder path must be supplied for QuickBMSFolderMode = 'StaticFolder'", result.First().loadErrors.First());
+		}
+
+		[Test]
+		public void InvalidQuickBMSExtractMode_StaticFolder_Null()
+		{
+			var integration = CreateTestIntegration("test-game");
+			integration.QuickBMSExtractMode = QuickBMSExtractMode.StaticFolder;
+			integration.QuickBMSExtractPath = null;
+
+			var modPath = CreateTempIntegrationFiles(integration);
+			var integrationLoader = new GameIntegrationLoader(integrationCacheFolder, "1.1", "1.0");
+			var result = integrationLoader.Load(modPath);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			Assert.AreEqual("A QuickBMS folder path must be supplied for QuickBMSFolderMode = 'StaticFolder'", result.First().loadErrors.First());
+		}
+
+		#endregion
 	}
 }

@@ -431,7 +431,24 @@ namespace Continuum.Core
 			// Move all extracted files into the root folder
 			var physicalTargetPath = ResolvePath(file, modAction.mod);
 			var fileInfo = new FileInfo(physicalTargetPath);
-			var newFolder = Path.Combine(tempFolder, Path.GetFileNameWithoutExtension(fileInfo.Name));
+			
+			string extractFolderPath = null;
+			switch (integration.QuickBMSExtractMode)
+			{
+				case QuickBMSExtractMode.NamedFolder:
+					extractFolderPath = Path.GetFileNameWithoutExtension(fileInfo.Name);
+					break;
+				case QuickBMSExtractMode.RootFolder:
+					extractFolderPath = string.Empty;
+					break;
+				case QuickBMSExtractMode.StaticFolder:
+					extractFolderPath = integration.QuickBMSExtractPath;
+					break;
+				default:
+					throw new System.Exception($"Invalid 'QuickBMSExtractMode' supplied - {integration.QuickBMSExtractMode}");
+			}
+
+			var newFolder = Path.Combine(tempFolder, extractFolderPath);
 			var newFiles = Directory.GetFiles(newFolder, "*", SearchOption.AllDirectories);
 
 			foreach (var newFile in newFiles)
@@ -1140,6 +1157,12 @@ namespace Continuum.Core
 
 		private bool HasAutoMapping(string resourceFile, IEnumerable<AutoMapping> automappings, out AutoMapping autoMapping)
 		{
+			if (automappings == null)
+			{
+				autoMapping = null;
+				return false;
+			}
+
 			foreach (var map in automappings)
 			{
 				var files = Directory.GetFiles(ResolvePath(map.TargetPath, null));

@@ -66,6 +66,12 @@ namespace Continuum.Core
 			if (integration.Contributors != null && integration.Contributors.Length > 0)
 				CheckAuthorsAreValid(integration.Contributors, loadErrors);
 
+			if (integration.QuickBMSExtractMode == QuickBMSExtractMode.StaticFolder && string.IsNullOrEmpty(integration.QuickBMSExtractPath))
+				loadErrors.Add("A QuickBMS folder path must be supplied for QuickBMSFolderMode = 'StaticFolder'");
+
+			if (integration.QuickBMSExtractMode != QuickBMSExtractMode.StaticFolder && !string.IsNullOrEmpty(integration.QuickBMSExtractPath))
+				loadErrors.Add("A QuickBMS folder can only be supplied for QuickBMSFolderMode = 'StaticFolder'");
+
 			CheckAutomappingsAreValid(integration.QuickBMSAutoMappings, loadErrors);
 			CheckAutomappingsAreValid(integration.UnzipAutoMappings, loadErrors);
 			CheckActionsAreValid(integration.SetupActions, InstallActionValidationContext.Integration, loadErrors);
