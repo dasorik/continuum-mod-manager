@@ -33,18 +33,21 @@
                                     <a class="nav-link @GetActiveClass(SettingsTab.Integration)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.Integration; }">
                                         <span class="nav-icon" aria-hidden="true">
                                             <img src="@Base64Utility.ConvertFileToBase64(integration.GetRelativePath(integration.DisplayIcon))" class="unselectable" />
-                                        </span> @integration.DisplayName
+                                        </span>
+                                        <span class="nav-text">@integration.DisplayName</span>
                                     </a>
                                 </li>
                             }
                             <li class="nav-item">
                                 <a class="nav-link @GetActiveClass(SettingsTab.Application)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.Application; }">
-                                    <span class="nav-icon gear" aria-hidden="true"></span> Application
+                                    <span class="nav-icon gear" aria-hidden="true"></span>
+                                    <span class="nav-text">Application</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link @GetActiveClass(SettingsTab.AllIntegrations)" href="javascript:void(0);" @onclick="e => { activeTab = SettingsTab.AllIntegrations; }">
-                                    <span class="nav-icon game" aria-hidden="true"></span> Integrations
+                                    <span class="nav-icon game" aria-hidden="true"></span>
+                                    <span class="nav-text">Integrations</span>
                                 </a>
                             </li>
                         </ul>

@@ -290,6 +290,7 @@ app,
     .sidebar .nav-item {
         font-size: 0.9rem;
         padding-bottom: 0.5rem;
+        width: 100%;
     }
 
         .sidebar .nav-item:first-of-type {
@@ -442,6 +443,7 @@ app,
 .nav-link {
     font-family: RobotoLight, Arial;
     font-size: 1.2em;
+    text-overflow: ellipsis;
 }
 
 .nav li hr {
@@ -454,6 +456,7 @@ app,
 
 .nav-icon {
     width: 26px;
+    min-width: 26px;
     height: 26px;
     background-size: cover;
     display: inline-block;
@@ -484,6 +487,12 @@ app,
 
 .nav-icon.game {
     background-image: url('../img/icon-game.svg')
+}
+
+.nav-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .nav-header {

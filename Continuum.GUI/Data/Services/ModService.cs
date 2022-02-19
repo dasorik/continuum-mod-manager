@@ -331,6 +331,12 @@ namespace Continuum.GUI.Services
 				var integrationSettings = Settings.GetIntegration(integration.IntegrationID);
 				var configuration = GetConfiguration(integration, checkForCollisions: false, backupFolder: integrationBackupFolder);
 
+				if (!integrationSettings.SetUpApplied)
+				{
+					Logger.Log("Setup has not applied for this integration, no changes have been made", LogSeverity.Info);
+					return ModSetUpStatus.Success;
+				}
+
 				var modInstaller = new ModInstaller(configuration, integration, fileModifications: integrationSettings.IntegrationFileModifications, progressTracker: progressTracker);
 				var result = await modInstaller.RemoveAllChanges(isIntegration: true);
 
