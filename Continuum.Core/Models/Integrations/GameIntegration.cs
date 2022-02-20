@@ -20,6 +20,8 @@ namespace Continuum.Core.Models
 		public string MinimumApplicationVersion;
 		public string TargetApplicationVersion;
 		public string QuickBMSScript;
+		public QuickBMSExtractMode QuickBMSExtractMode = QuickBMSExtractMode.NamedFolder;
+		public string QuickBMSExtractPath;
 		public ModInstallAction[] SetupActions;
 		public AutoMapping[] QuickBMSAutoMappings;
 		public AutoMapping[] UnzipAutoMappings;
