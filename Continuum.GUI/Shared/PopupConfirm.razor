@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div hidden="@Hidden">
     <div class="popup-container">
         <div class="popup-dialog @GetAlertClass()">
             @if (Config.showIcon)
@@ -26,6 +26,7 @@
 
 @code {
     [Parameter] public ConfirmationDialogConfig Config { get; set; }
+    [Parameter] public bool Hidden { get; set; }
 
     private string GetAlertIcon()
     {

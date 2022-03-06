@@ -6,7 +6,7 @@
 @inject Continuum.GUI.Services.ModService modService;
 @inject Continuum.GUI.Services.DialogService dialogService;
 
-<div>
+<div hidden="@Hidden">
     <div class="popup-container" @onclick="RouteCloseAction">
         <div class="popup-large-details" @onclick:stopPropagation="true">
             <div class="mod-details-header-img">
@@ -135,6 +135,7 @@
 
 @code {
     [Parameter] public ModDetailsConfig Config { get; set; }
+    [Parameter] public bool Hidden { get; set; }
 
     protected ActiveTab activeTab = ActiveTab.Details;
     bool enableSave = false;

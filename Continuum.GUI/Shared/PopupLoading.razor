@@ -1,6 +1,6 @@
 ﻿@implements IDisposable
 
-<div>
+<div hidden="@Hidden">
     <div class="popup-container">
         <div class="popup-dialog wide">
             <div class="popup-icon">
@@ -32,6 +32,7 @@
 
 @code {
     [Parameter] public LoadingDialogConfig Config { get; set; }
+    [Parameter] public bool Hidden { get; set; }
 
     private bool disposed = false;
 

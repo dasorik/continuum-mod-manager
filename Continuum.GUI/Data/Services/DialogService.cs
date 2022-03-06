@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections;
 
 namespace Continuum.GUI.Services
 {
-	public class DialogService
+	public class DialogService : IEnumerable<IDialog>
 	{
         Stack<IDialog> dialogStack = new Stack<IDialog>();
 
@@ -118,6 +119,11 @@ namespace Continuum.GUI.Services
             OnDialogChanged?.Invoke();
         }
 
+        public bool IsCurrentContext(IDialog dialog)
+        {
+            return dialogStack.Peek() == dialog;
+        }
+
         public bool IsCurrentContext<T>(out T dialogConfig) where T : IDialog
 		{
             if (dialogStack.Count == 0)
@@ -137,5 +143,15 @@ namespace Continuum.GUI.Services
                 return false;
 			}
 		}
-    }
+
+		public IEnumerator<IDialog> GetEnumerator()
+		{
+            return dialogStack.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+            return dialogStack.GetEnumerator();
+        }
+	}
 }

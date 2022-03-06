@@ -30,6 +30,7 @@ namespace Continuum.Core
 		FileWriter fileWriter;
 		List<ModCollision> conflicts;
 		FileModificationCache modifications;
+		List<ModInstallInfo> installedModList;
 
 		HashSet<string> reservedFiles = new HashSet<string>();
 		HashSet<string> decompiledFiles = new HashSet<string>();
@@ -37,10 +38,11 @@ namespace Continuum.Core
 		HashSet<string> extractedFiles = new HashSet<string>();
 		HashSet<string> deletedFiles = new HashSet<string>();
 
-		public ModInstaller(ModInstallerConfiguration configuration, GameIntegration integration, FileModificationCache fileModifications = null, ProgressTracker progressTracker = null)
+		public ModInstaller(ModInstallerConfiguration configuration, GameIntegration integration, FileModificationCache fileModifications = null, ProgressTracker progressTracker = null, List<ModInstallInfo> installedModList = null)
 		{
 			this.configuration = configuration;
 			this.integration = integration;
+			this.installedModList = installedModList ?? new List<ModInstallInfo>();
 
 			this.progressTracker = progressTracker ?? new ProgressTracker();
 
@@ -162,11 +164,32 @@ namespace Continuum.Core
 						return new InstallResult(InstallationStatus.InvalidActions, conflicts, modifications);
 				}
 
-				return PerformActions(modActions, trackProgress: true);
+				var result = PerformActions(modActions, trackProgress: true);
+
+				if (result?.status == InstallationStatus.UnresolvableConflict)
+				{
+					Logger.Log($"Installation ran into an unresolveable conflict - Removing changes", LogSeverity.Warning);
+
+					if (Directory.Exists(configuration.TempFolder))
+						Directory.Delete(configuration.TempFolder, true);
+
+					var originalConflicts = result.conflicts;
+
+					// Rollback all changes made (restoring the app to the state prior to applying the current mod list)
+					ApplyChangesInternal(installedModList.ToArray(), true);
+					return new InstallResult(InstallationStatus.UnresolvableConflict, originalConflicts, modifications); // conflicts array is reset during rollback, so grab the original list
+				}
+				else
+				{
+					// Update the list of mods installed (since this action was successfull)
+					installedModList = mods.ToList();
+				}
+
+				return result;
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex.ToString(), LogSeverity.Error);
+				Logger.Log($"Exception occured during installation - Removing changes: {ex}", LogSeverity.Error);
 
 				if (Directory.Exists(configuration.TempFolder))
 					Directory.Delete(configuration.TempFolder, true);
@@ -175,12 +198,14 @@ namespace Continuum.Core
 				{
 					// If we error out during revert, delete everything (something has gone badly wrong)
 					RemoveAllChanges();
+					installedModList.Clear();
+
 					return new InstallResult(InstallationStatus.FatalError, conflicts, modifications);
 				}
 				else
 				{
 					// Revert back to the previous install state
-					ApplyChangesInternal(mods.Take(mods.Count() - 1).ToArray(), true);
+					ApplyChangesInternal(installedModList.ToArray(), true);
 					return new InstallResult(InstallationStatus.RolledBackError, conflicts, modifications);
 				}
 			}

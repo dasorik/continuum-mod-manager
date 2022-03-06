@@ -15,13 +15,13 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(file))
 			{
 				FileModification action;
-				if (modifications.HasModification(file, FileModificationType.Moved, out action) && destinationPath != action.DestinationPath)
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out action) && destinationPath != action.DestinationPath)
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Moved, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Edited, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Deleted, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Deleted, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -30,11 +30,11 @@ namespace Continuum.Core
 				FileModification action;
 				string fileMD5 = null, destinationMD5 = null;
 
-				if (modifications.HasModification(destinationPath, FileModificationType.Replaced, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Replaced, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
-				else if (modifications.HasModification(destinationPath, FileModificationType.Edited, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Edited, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
-				else if (modifications.HasModification(destinationPath, FileModificationType.Added, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Added, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Move, FileModificationType.Added, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
 			}
 
@@ -47,13 +47,13 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(file))
 			{
 				FileModification action;
-				if (modifications.HasModification(file, FileModificationType.Moved, out action) && destinationPath != action.DestinationPath)
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out action) && destinationPath != action.DestinationPath)
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Moved, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Edited, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Deleted, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Deleted, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -62,11 +62,11 @@ namespace Continuum.Core
 				FileModification action;
 				string fileMD5 = null, destinationMD5 = null;
 
-				if (modifications.HasModification(destinationPath, FileModificationType.Replaced, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Replaced, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
-				else if (modifications.HasModification(destinationPath, FileModificationType.Edited, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Edited, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
-				else if (modifications.HasModification(destinationPath, FileModificationType.Added, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Added, out action) && GetMD5(file, ref fileMD5) != GetMD5(destinationPath, ref destinationMD5))
 					return AddModCollision(currentMod, ModInstallActionEnum.Copy, FileModificationType.Added, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
 			}
 
@@ -79,13 +79,13 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(file))
 			{
 				FileModification action;
-				if (modifications.HasModification(file, FileModificationType.Moved, out action))
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Replace, FileModificationType.Moved, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out action) && MD5Utility.CalculateMD5Hash(file) != MD5Utility.CalculateMD5Hash(replacementFile))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out action) && MD5Utility.CalculateMD5Hash(file) != MD5Utility.CalculateMD5Hash(replacementFile))
 					return AddModCollision(currentMod, ModInstallActionEnum.Replace, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision, suffix: "(with different data)");
-				else if (modifications.HasModification(file, FileModificationType.Edited, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Replace, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Deleted, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Replace, FileModificationType.Deleted, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -98,13 +98,13 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(file))
 			{
 				FileModification action;
-				if (modifications.HasModification(file, FileModificationType.Moved, out action))
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Edit, FileModificationType.Moved, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Edit, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Edited, out action) && !fileWriter.CanWrite(file, content))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out action) && !fileWriter.CanWrite(file, content))
 					return AddModCollision(currentMod, ModInstallActionEnum.Edit, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Deleted, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Edit, FileModificationType.Deleted, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -117,11 +117,11 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(destinationPath))
 			{
 				FileModification action;
-				if (modifications.HasModification(destinationPath, FileModificationType.Added, out action))
+				if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Added, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Added, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(destinationPath, FileModificationType.Replaced, out action))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Replaced, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(destinationPath, FileModificationType.Edited, out action))
+				else if (TryGetCollision(modifications, currentMod,destinationPath, FileModificationType.Edited, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -132,13 +132,13 @@ namespace Continuum.Core
 					continue;
 
 				// ie. We're attempting to add a file to a .zip that is deleted by another mod in the chain
-				if (modifications.HasModification(file, FileModificationType.Deleted, out fileAction))
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out fileAction))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Deleted, fileAction.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Moved, out fileAction))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out fileAction))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Moved, fileAction.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out fileAction))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out fileAction))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Replaced, fileAction.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Edited, out fileAction))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out fileAction))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Edited, fileAction.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -151,13 +151,13 @@ namespace Continuum.Core
 			if (modifications.HasAnyModifications(file))
 			{
 				FileModification action;
-				if (modifications.HasModification(file, FileModificationType.Deleted, out action))
+				if (TryGetCollision(modifications, currentMod,file, FileModificationType.Deleted, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Deleted, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Moved, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Moved, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Moved, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Replaced, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Replaced, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Replaced, action.ModID, ModCollisionSeverity.Clash, out collision);
-				else if (modifications.HasModification(file, FileModificationType.Edited, out action))
+				else if (TryGetCollision(modifications, currentMod,file, FileModificationType.Edited, out action))
 					return AddModCollision(currentMod, ModInstallActionEnum.Zip, FileModificationType.Edited, action.ModID, ModCollisionSeverity.Clash, out collision);
 			}
 
@@ -187,10 +187,28 @@ namespace Continuum.Core
 
 		private static bool AddModCollision(ModInstallInfo mod, string actionDescription, string collisionReasonDescription, string collidingModID, ModCollisionSeverity severity, out ModCollision collision, string suffix = "")
 		{
-			string modPrefix = mod != null ? $"Mod collision detected while installing mod ({mod.Config.ModID})" : $"Mod collision detected while applying changes";
+			string modPrefix = mod != null ? $"Mod collision detected while installing mod '{mod.Config.ModID}'" : $"Mod collision detected while applying changes";
 
-			collision = new ModCollision(collidingModID, severity, $"{modPrefix}) Attempting to {actionDescription} that has been {collisionReasonDescription} another mod{(string.IsNullOrEmpty(suffix) ? "" : $" {suffix}")} (conflicting mod - {collidingModID})");
+			collision = new ModCollision(collidingModID, severity, $"{modPrefix}. Attempting to {actionDescription} that has been {collisionReasonDescription} another mod{(string.IsNullOrEmpty(suffix) ? "" : $" {suffix}")} (Conflicting mod - {collidingModID})");
 			return true;
+		}
+
+		private static bool TryGetCollision(FileModificationCache modifications, ModInstallInfo mod, string file, FileModificationType type, out FileModification action)
+		{
+			if (modifications.HasModification(file, type, out action))
+			{
+				if (IsValidCollision(mod, action))
+					return true;
+			}
+
+			action = new FileModification();
+			return false;
+		}
+
+		private static bool IsValidCollision(ModInstallInfo mod, FileModification modification)
+		{
+			// Prevent self-collisions and assume that a mod that conflicts with iteself if ok
+			return modification.ModID != mod.Config.ModID;
 		}
 
 		private static string GetMD5(string file, ref string md5)

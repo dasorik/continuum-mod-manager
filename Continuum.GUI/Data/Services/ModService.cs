@@ -605,37 +605,37 @@ namespace Continuum.GUI.Services
 				throw new System.Exception("Cannot apply mods if the settings of one or more have not been configured");
 
 			var integrationSettings = Settings.GetIntegration(integration.IntegrationID);
-			var modInstalInfo = integrationSettings.InstalledMods.Select(id => GetModInstallInfo(integration, id)).ToList();
+			var currentModList = integrationSettings.InstalledMods.Select(id => GetModInstallInfo(integration, id)).ToList();
+			var newModList = new List<ModInstallInfo>(currentModList);
 
 			if (install)
 			{
-				modInstalInfo.AddRange(mods);
+				newModList.AddRange(mods);
 			}
 			else
 			{
 				// Remove the selected mods from the install list
 				foreach (var mod in mods)
-					modInstalInfo.Remove(mod);
+					newModList.Remove(mod);
 			}
 
 			try
 			{
 				var configuration = GetConfiguration(integration, checkForCollisions: true, backupFolder: backupFolder);
-				var modUtility = new ModInstaller(configuration, integration, fileModifications: integrationSettings.ModFileModifications, progressTracker: progressTracker);
-				var result = await modUtility.ApplyChanges(modInstalInfo.ToArray());
+				var modInstaller = new ModInstaller(configuration, integration, fileModifications: integrationSettings.ModFileModifications, progressTracker: progressTracker, installedModList: currentModList);
+				var result = await modInstaller.ApplyChanges(newModList.ToArray());
 
 				switch (result.status)
 				{
 					case InstallationStatus.Success:
-						integrationSettings.InstalledMods = modInstalInfo.Select(m => m.Config.ModID).ToList();
+					case InstallationStatus.ResolvableConflict:
+						integrationSettings.InstalledMods = newModList.Select(m => m.Config.ModID).ToList();
 						break;
 					case InstallationStatus.FatalError:
 						// We remove all installed mods in this instance (something really bad has happened)
 						integrationSettings.InstalledMods.Clear();
 						break;
 				}
-
-				integrationSettings.ModFileModifications = result.fileModifications;
 
 				SaveSettings();
 

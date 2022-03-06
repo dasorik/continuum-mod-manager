@@ -20,25 +20,28 @@
     </div>
 </div>
 
-@if (dialogService.IsCurrentContext(out LoadingDialogConfig loadingConfig))
+@foreach (var dialog in dialogService)
 {
-    <PopupLoading Config="loadingConfig" />
-}
-else if (dialogService.IsCurrentContext(out ConfirmationDialogConfig confirmConfig))
-{
-    <PopupConfirm Config="confirmConfig" />
-}
-else if (dialogService.IsCurrentContext(out AlertDialogConfig alertConfig))
-{
-    <PopupAlert Config="alertConfig" />
-}
-else if (dialogService.IsCurrentContext(out SettingsDialogConfig settingsConfig))
-{
-    <Settings Config="settingsConfig" OnIntegrationRemoved="OnIntegrationRemoved" OnIntegrationAdded="OnIntegrationAdded" />
-}
-else if (dialogService.IsCurrentContext(out ModDetailsConfig detailsConfig))
-{
-    <PopupModDetails Config="detailsConfig" />
+    @if (dialog.GetType() == typeof(LoadingDialogConfig))
+    {
+        <PopupLoading Config="(LoadingDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" />
+    }
+    else if (dialog.GetType() == typeof(ConfirmationDialogConfig))
+    {
+        <PopupConfirm Config="(ConfirmationDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" />
+    }
+    else if (dialog.GetType() == typeof(AlertDialogConfig))
+    {
+        <PopupAlert Config="(AlertDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" />
+    }
+    else if (dialog.GetType() == typeof(SettingsDialogConfig))
+    {
+        <Settings Config="(SettingsDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" OnIntegrationRemoved="OnIntegrationRemoved" OnIntegrationAdded="OnIntegrationAdded" />
+    }
+    else if (dialog.GetType() == typeof(ModDetailsConfig))
+    {
+        <PopupModDetails Config="(ModDetailsConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" />
+    }
 }
 
 <div class="main-content-layout">

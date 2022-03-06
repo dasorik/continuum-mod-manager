@@ -813,5 +813,228 @@ namespace Continuum.Core.Test
 			Assert.AreEqual(InstallationStatus.Success, result.status);
 			Assert.IsTrue(!File.Exists(integrationFile));
 		}
+
+		[Test]
+		public async Task Mod_Install_SelfConflict_MoveAction()
+		{
+			var installer = new ModInstaller(configuration, integration);
+			var modConfig = CreateTestModConfig("test-mod");
+			
+			modConfig.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					DestinationPath = "[Game]\\assets\\game_asset_renamed1.pak"
+				},
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					DestinationPath = "[Game]\\assets\\game_asset_renamed2.pak"
+				}
+			};
+
+			var modPath = CreateTempModFiles(modConfig);
+			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			loader.Load(modPath);
+
+			var modInstallInfo = GetModInstallationInfo(modConfig);
+			var result = await installer.ApplyChanges(modInstallInfo);
+
+			Assert.AreEqual(InstallationStatus.RolledBackError, result.status); // Mod doesn't conflict with itself, but does still fail
+		}
+
+		[Test]
+		public async Task Mod_Install_SelfConflict_ReplaceAction()
+		{
+			var installer = new ModInstaller(configuration, integration);
+			var modConfig = CreateTestModConfig("test-mod");
+
+			modConfig.InstallActions = new[]
+			{
+				new ReplaceFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					ReplacementFile = "[Mod]\\mod_resource1.pak"
+				},
+				new ReplaceFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					ReplacementFile = "[Mod]\\mod_resource2.pak"
+				},
+			};
+
+			var modPath = CreateTempModFiles(modConfig);
+			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			loader.Load(modPath);
+
+			var modInstallInfo = GetModInstallationInfo(modConfig);
+			var result = await installer.ApplyChanges(modInstallInfo);
+
+			Assert.AreEqual(InstallationStatus.Success, result.status);
+		}
+
+		[Test]
+		public async Task Mod_Install_Conflict_CheckResults()
+		{
+			var installer = new ModInstaller(configuration, integration);
+			var modConfig1 = CreateTestModConfig("test-mod");
+			var modConfig2 = CreateTestModConfig("test-mod2");
+
+			modConfig1.InstallActions = new[]
+			{
+				new ReplaceFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					ReplacementFile = "[Mod]\\mod_resource1.pak"
+				}
+			};
+
+			modConfig2.InstallActions = new[]
+			{
+				new ReplaceFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					ReplacementFile = "[Mod]\\mod_resource2.pak"
+				}
+			};
+
+			var modPath1 = CreateTempModFiles(modConfig1);
+			var modPath2 = CreateTempModFiles(modConfig2);
+
+			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			loader.Load(modPath1, modPath2);
+
+			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
+			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
+			var result = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2);
+
+			Assert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
+			Assert.AreEqual("test-mod", result.conflicts.FirstOrDefault().modID);
+		}
+
+		[Test]
+		public async Task CheckUninstallRollback_TwoInstalled_OneRolledBack()
+		{
+			var installer = new ModInstaller(configuration, integration);
+			var modConfig1 = CreateTestModConfig("test-mod");
+			var modConfig2 = CreateTestModConfig("test-mod2");
+			var modConfig3 = CreateTestModConfig("test-mod3");
+
+			modConfig1.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					DestinationPath = "[Game]\\assets\\asset1_renamed.pak"
+				}
+			};
+
+			modConfig2.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset2.pak",
+					DestinationPath = "[Game]\\assets\\asset2_renamed.pak"
+				}
+			};
+
+			modConfig3.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset2.pak",
+					DestinationPath = "[Game]\\assets\\asset2_conflict.pak"
+				}
+			};
+
+			var modPath1 = CreateTempModFiles(modConfig1);
+			var modPath2 = CreateTempModFiles(modConfig2);
+			var modPath3 = CreateTempModFiles(modConfig3);
+
+			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			loader.Load(modPath1, modPath2, modPath3);
+
+			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
+			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
+			var modInstallInfo3 = GetModInstallationInfo(modConfig3);
+
+			// Install the first two mods, and then install the third after
+			var firstResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2);
+			var secondResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2, modInstallInfo3);
+
+			Assert.AreEqual(InstallationStatus.Success, firstResult.status);
+			Assert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
+
+			string modFile1 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_renamed.pak");
+			string modFile2 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_renamed.pak");
+			string modFile3 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_conflict.pak");
+
+			Assert.IsTrue(File.Exists(modFile1));
+			Assert.IsTrue(File.Exists(modFile2));
+			Assert.IsTrue(!File.Exists(modFile3));
+		}
+
+		[Test]
+		public async Task CheckUninstallRollback_OneInstalled_TwoRolledBack()
+		{
+			var installer = new ModInstaller(configuration, integration);
+			var modConfig1 = CreateTestModConfig("test-mod");
+			var modConfig2 = CreateTestModConfig("test-mod2");
+			var modConfig3 = CreateTestModConfig("test-mod3");
+
+			modConfig1.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					DestinationPath = "[Game]\\assets\\asset1_renamed.pak"
+				}
+			};
+
+			modConfig2.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset2.pak",
+					DestinationPath = "[Game]\\assets\\asset2_renamed.pak"
+				}
+			};
+
+			modConfig3.InstallActions = new[]
+			{
+				new MoveFileAction()
+				{
+					TargetFile = "[Game]\\assets\\asset1.pak",
+					DestinationPath = "[Game]\\assets\\asset1_conflict.pak"
+				}
+			};
+
+			var modPath1 = CreateTempModFiles(modConfig1);
+			var modPath2 = CreateTempModFiles(modConfig2);
+			var modPath3 = CreateTempModFiles(modConfig3);
+
+			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			loader.Load(modPath1, modPath2, modPath3);
+
+			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
+			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
+			var modInstallInfo3 = GetModInstallationInfo(modConfig3);
+
+			// Install the first two mods, and then install the third after
+			var firstResult = await installer.ApplyChanges(modInstallInfo1);
+			var secondResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2, modInstallInfo3);
+
+			Assert.AreEqual(InstallationStatus.Success, firstResult.status);
+			Assert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
+
+			string modFile1 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_renamed.pak");
+			string modFile2 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_renamed.pak");
+			string modFile3 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_conflict.pak");
+
+			Assert.IsTrue(File.Exists(modFile1));
+			Assert.IsTrue(!File.Exists(modFile2));
+			Assert.IsTrue(!File.Exists(modFile3));
+		}
 	}
 }
