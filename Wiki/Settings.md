@@ -65,7 +65,8 @@ Text settings can define a list of validators that will be executed against the 
 | :--- | :--- | :--- |
 | ValidationType | String | Must be either "MandatoryField", "PathExists", or "Regex" |
 | ErrorMessage | String | Text to show if the field fails validation |
-| PathSuffix | String | (PathExists validator only - Optional) A path suffix that is appended on to the end of the textbox value that must also exist |
+| PathSuffix | String | (PathExists validator only - Optional) A path suffix that is appended on to the end of the textbox path value that must also exist (as a file) |
+| AllowedPathSuffixes | Stringp[] | (PathExists validator only - Optional) A list of allowed path suffixes that if appended on to the end of the textbox path value must have at least one instance that exists (as a file) |
 | Regex | String | (Regex validator only) A regex pattern that the textbox value must match in it's entirety |
 
 Example
