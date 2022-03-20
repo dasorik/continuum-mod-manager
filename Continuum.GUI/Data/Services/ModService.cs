@@ -637,6 +637,7 @@ namespace Continuum.GUI.Services
 						break;
 				}
 
+				integrationSettings.ModFileModifications = result.fileModifications;
 				SaveSettings();
 
 				return result;
