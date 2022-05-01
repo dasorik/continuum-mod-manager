@@ -10,9 +10,12 @@ namespace Continuum.Core.Utilities
 {
 	public class QuickBMSUtility
 	{
+		const long FOUR_GB_TO_BYTES = 4294967296;
+
 		public static void ExtractFiles(string inputPath, string outputPath, string toolPath, string scriptPath)
 		{
-			var quickBmsPath = Path.Combine(toolPath, "quickbms\\quickbms.exe");
+			var fileInfo = new FileInfo(inputPath);
+			var quickBmsPath = Path.Combine(toolPath, fileInfo.Length < FOUR_GB_TO_BYTES ? "quickbms\\quickbms.exe" : "quickbms\\quickbms_4gb_files.exe");
 
 			Logger.Log($"Extracting file {inputPath} with QuickBMS", LogSeverity.Info);
 
