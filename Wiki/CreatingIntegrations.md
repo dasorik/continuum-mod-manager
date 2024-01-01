@@ -33,6 +33,8 @@ The `config.json` file should contain the following properties
 | TargetApplicationVersion | String | The targeted Continuum application version (in {major}.{minor} format). Can either be a specfic (exact) version (ie. `"2.5"`), or a wildcard (ie. `"2.\*"`, to support all `2.X` versions of the integration - wildcards can only be applied to minor versions). Applications versions higher than this version will only support the integration if the `ApplicationCompatibilityVersion` is less than or equal to `TargetApplicationVersion` or the `MinimumApplicationVersion` |
 | MinimumApplicationVersion | String | The minimum compatible application (in {major}.{minor} format) that this integration is supported in. Can either be a specfic (exact) version (ie. `"2.5"`), or a wildcard (ie. `"2.\*"`, to target all `2.X` versions of the integration - wildcards can only be applied to minor versions). If left blank, the minimum version will be assumed to the the `TargetApplicationVersion`. |
 | QuickBMSScript | String | The file path (relative to the root of the integration's files) where the QuickBMS script needed to extract the game's specific files is located. If needing to use QuickBMS for mods, ensure that this is defined |
+| QuickBMSExtractMode | String | Must be either "RootFolder"/"NamedFolder"/"StaticFolder". Will default to "NamedFolder" if left blank (See section "QuickBMS Extract Modes" below for further details) |
+| QuickBMSExtractPath | String | Only if using extract mode `StaticFolder` should property must be defined. Used to denote the relative file path of where extracted QuickBMS files (for a single file) should be copied from when moving into the game data folder |
 | SetUpActions | [ModInstallAction](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/InstallationActions.md)[] | A list of installation actions that the integration will execute prior to allowing mods to be installed. Use this to set up the game files so that they are ready for modding (once uninstalling the integration, these changes will be reverted/uninstalled). See section 'Mod Install Actions' below for details on valid action definitions |
 | QuickBMSAutomapping | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after QuickBMS extract |
 | UnzipAutoMappings | [AutoMapping](https://github.com/dasorik/continuum-mod-manager/blob/main/Wiki/Automapping.md)[] | The list of file automappings that should be applied to files after zip extract |
@@ -49,6 +51,14 @@ The `config.json` file should contain the following properties
 | Category | String | Internally referenced name of the category |
 | DisplayName | String | The name of the category as shown in the UI |
 | IconPath | String | The file path, relative to the root integration folder that the icon for this category is located (this should be inside of the `icons\` folder) |
+
+### QuickBMS Extract Modes
+QuickBMS files can be extracted in different ways. Depending on the extract result, there may be a need to remove a root directory before copying files into the game directory. Extract modes allow you to define the extract root directory relative path (if applicable)
+| Mode Name | Description |
+| :--- | :--- |
+| NamedFolder | Files extracted from the .zip file will be copied into the game directory relative to a folder of the same name as the .zip file (this is the default behaviour). |
+| RootFolder | Files extracted from the .zip file will be copied into the game directory relative to the root folder of the extracted .zip |
+| StaticFolder | Files extracted from the .zip file will be copied into the game directory relative to a statically named folder, defined by the `QuickBMSExtractPath` property on the game integration |
 
 ## Example
 The end result of a config file will look similar to the below
