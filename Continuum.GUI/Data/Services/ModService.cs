@@ -362,6 +362,37 @@ namespace Continuum.GUI.Services
 			}
 		}
 
+		public async Task<bool> ClearIntegrationCache(GameIntegration integration, ProgressTracker progressTracker)
+		{
+			try
+			{
+				var integrationSettings = Settings.GetIntegration(integration.IntegrationID);
+
+				var modBackupPath = Path.Combine(backupFolder, StringUtility.GetSHAOfString(integration.IntegrationID));
+				var integrationBackupPath = Path.Combine(integrationBackupFolder, StringUtility.GetSHAOfString(integration.IntegrationID));
+
+				if (Directory.Exists(modBackupPath))
+					Directory.Delete(modBackupPath, true);
+
+				if (Directory.Exists(integrationBackupPath))
+					Directory.Delete(integrationBackupPath, true);
+
+				integrationSettings.SetUpApplied = false;
+				integrationSettings.ModFileModifications = new FileModificationCache();
+				integrationSettings.IntegrationFileModifications = new FileModificationCache();
+				integrationSettings.InstalledMods = new List<string>();
+
+				SaveSettings();
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(ex.ToString(), LogSeverity.Error);
+				return false;
+			}
+
+			return true;
+		}
+
 		async Task<bool> CheckForNonStandardInstallation()
 		{
 			return false; // TODO - Implement this

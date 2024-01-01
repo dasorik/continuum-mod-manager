@@ -350,11 +350,13 @@
     {
         if (modService.RequiresSetUp(integration))
         {
-            dialogService.ShowAlertDialog(
+            dialogService.ShowConfirmDialog(
                 title: "Set up installation?",
                 message: "Your game installation needs to be configured before mods can be installed. Would you like to do this now? (depending on the game, this may take a few minutes)",
                 level: AlertLevel.Info,
-                onClick: async () =>
+                cancelText: "Later",
+                confirmText: "Set Up Now",
+                confirmAction: async () =>
                 {
                     var loadingContext = new Continuum.Core.ProgressTracker();
                     var dialog = dialogService.ShowLoadingDialog(

@@ -97,6 +97,10 @@
                                             </span>
                                             <span class="flex-grow-1"></span>
                                             <span>
+                                                <button class="btn btn-primary" title="Clear the Continuum cache for this integration" @onclick="() => TryClearIntegrationCache(integration)">Clear Cache</button>
+                                            </span>
+                                            <span class="flex-grow-1"></span>
+                                            <span>
                                                 @{var canDeleteIntegration = modService.CanDeleteIntegration(integration);}
                                                 <button class="btn btn-delete" title="@(canDeleteIntegration ? "" : "Integration has active mods, please uninstall/remove all mods to delete")" disabled="@(!canDeleteIntegration)" @onclick="() => TryDeleteIntegration(integration)"></button>
                                             </span>
@@ -123,6 +127,7 @@
     [Parameter] public SettingsDialogConfig Config { get; set; }
     [Parameter] public EventCallback<Continuum.Core.Models.GameIntegration> OnIntegrationRemoved { get; set; }
     [Parameter] public EventCallback OnIntegrationAdded { get; set; }
+    [Parameter] public EventCallback OnCachedRemoved { get; set; }
     [Parameter] public bool Hidden { get; set; }
 
     bool showLoadingIcon = false;
@@ -335,6 +340,48 @@
                     await OnIntegrationRemoved.InvokeAsync(integration);
 
                     showLoadingIcon = false;
+                }
+            }
+        );
+    }
+
+    protected void TryClearIntegrationCache(GameIntegration integration)
+    {
+        dialogService.ShowConfirmDialog(
+            title: "Clear integration cache?",
+            message: "Are you sure you wish to clear the integration cache? This will mark all mods as uninstalled (but not impact game files), and remove all cached backup files.",
+            cancelText: "Take me back",
+            confirmText: "Yes, Clear Cache",
+            level: AlertLevel.Error,
+            confirmAction: async () =>
+            {
+                var loadingContext = new Continuum.Core.ProgressTracker();
+                var dialog = dialogService.ShowLoadingDialog(
+                    title: "Clearing integration cache",
+                    progressTracker: loadingContext,
+                    refreshTime: loadingRefreshTime
+                );
+
+                var success = await modService.ClearIntegrationCache(integration, loadingContext);
+                dialogService.Remove(dialog); // Remove the loading icon
+
+                if (!success)
+                {
+                    dialogService.ShowAlertDialog(
+                        title: "Oops, Something went wrong!",
+                        message: "Something went wrong during removal of integration cache files",
+                        level: AlertLevel.Error
+                    );
+                }
+                else
+                {
+                    await OnCachedRemoved.InvokeAsync(null);
+
+                    dialogService.ShowAlertDialog(
+                        title: "Integration cache cleared successfully",
+                        message: "Cached files have been removed, please ensure that you validate your game files before re-installing mods.",
+                        level: AlertLevel.Success
+                    );
                 }
             }
         );
