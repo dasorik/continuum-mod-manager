@@ -17,8 +17,8 @@
                 @Config.message
             </div>
             <div class="popup-buttons">
-                <button type="button" class="btn btn-primary" @onclick="Config.confirmAction">@(string.IsNullOrEmpty(Config.confirmButtonText) ? "OK" : Config.confirmButtonText)</button>
-                <button type="button" class="btn btn-warning" @onclick="Config.cancelAction">@(string.IsNullOrEmpty(Config.cancelButtonText) ? "Cancel" : Config.cancelButtonText)</button>
+                <button type="button" class="btn @GetConfirmButtonStyle()" @onclick="Config.confirmAction">@(string.IsNullOrEmpty(Config.confirmButtonText) ? "OK" : Config.confirmButtonText)</button>
+                <button type="button" class="btn @GetCancelButtonStyle()" @onclick="Config.cancelAction">@(string.IsNullOrEmpty(Config.cancelButtonText) ? "Cancel" : Config.cancelButtonText)</button>
             </div>
         </div>
     </div>
@@ -55,6 +55,28 @@
                 return "alert-error";
             default:
                 return "alert-info";
+        }
+    }
+
+    private string GetConfirmButtonStyle()
+    {
+        switch (Config.level)
+        {
+            case AlertLevel.Error:
+                return "btn-danger";
+            default:
+                return "btn-primary";
+        }
+    }
+
+    private string GetCancelButtonStyle()
+    {
+        switch (Config.level)
+        {
+            case AlertLevel.Error:
+                return "btn-primary";
+            default:
+                return "btn-warning";
         }
     }
 }

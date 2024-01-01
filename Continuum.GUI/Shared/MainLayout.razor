@@ -36,7 +36,7 @@
     }
     else if (dialog.GetType() == typeof(SettingsDialogConfig))
     {
-        <Settings Config="(SettingsDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" OnIntegrationRemoved="OnIntegrationRemoved" OnIntegrationAdded="OnIntegrationAdded" />
+        <Settings Config="(SettingsDialogConfig)dialog" Hidden="!dialogService.IsCurrentContext(dialog)" OnIntegrationRemoved="OnIntegrationRemoved" OnIntegrationAdded="OnIntegrationAdded" OnCachedRemoved="OnCachedRemoved" />
     }
     else if (dialog.GetType() == typeof(ModDetailsConfig))
     {
@@ -179,5 +179,10 @@
     void OnIntegrationAdded()
     {
         navigationManager.NavigateTo("integrations");
+    }
+
+    void OnCachedRemoved()
+    {
+        navigationManager.NavigateTo("/");
     }
 }
