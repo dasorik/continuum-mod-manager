@@ -1,16 +1,21 @@
 ﻿@using Continuum.Common.Utilities;
 @using Continuum.Core.Models;
 
+@inject Continuum.GUI.Services.ModService modService;
+
+
 <div id="mod-button-@Mod.ModID" class="mod-icon-parent mod @GetSelectedStyle()" @onclick="@RouteMainAction">
-    <div class="mod-icon mod @(Installed ? string.Empty : "disabled")">
-        @{var path = Mod.GetRelativePath(Mod.DisplayImage);}
-        <img src="@Base64Utility.ConvertFileToBase64(path)" class="vertical-align unselectable" />
+    <div class="mod-icon mod">
+        @if (encodedImage != null)
+        {
+            <img src="@encodedImage" class="vertical-align unselectable" />
+        }
     </div>
 
-    @if (!string.IsNullOrEmpty(IconPath))
+    @if (encodedIcon != null)
     {
         <div class="icon">
-            <img src="@Base64Utility.ConvertFileToBase64(IconPath)" class="unselectable" />
+            <img src="@encodedIcon" class="unselectable" />
         </div>
     }
 
@@ -27,12 +32,33 @@
 
 @code {
     [Parameter] public Continuum.Core.Models.ModConfiguration Mod { get; set; }
-    [Parameter] public string IconPath { get; set; }
-    [Parameter] public bool Installed { get; set; }
+    [Parameter] public Continuum.Core.Models.GameIntegration Integration { get; set; }
     [Parameter] public bool MultiSelectEnabled { get; set; }
     [Parameter] public bool Selected { get; set; }
     [Parameter] public EventCallback<Continuum.Core.Models.ModConfiguration> OnClick { get; set; }
     [Parameter] public EventCallback<Continuum.Core.Models.ModConfiguration> OnCheckboxClick { get; set; }
+
+    private string? encodedImage = null;
+    private string? encodedIcon = null;
+
+    private Continuum.Core.Models.ModConfiguration? previousMod = null;
+    private Continuum.Core.Models.GameIntegration? previousIntegration = null;
+
+    private async Task ReloadAsync()
+    {
+        string modIconPath = modService.GetModIcon(Integration, Mod);
+
+        encodedImage = await Base64Utility.ConvertFileToBase64Async(Mod.GetRelativePath(Mod.DisplayImage));
+
+        if (string.IsNullOrWhiteSpace(modIconPath))
+        {
+            encodedIcon = null;
+        }
+        else
+        {
+            encodedIcon = await Base64Utility.ConvertFileToBase64Async(modIconPath);
+        }
+    }
 
     protected async void RouteMainAction()
     {
@@ -47,5 +73,25 @@
     protected string GetSelectedStyle()
     {
         return Selected ? "selected" : "show-on-hover";
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Only update if this is the first render, or linked object has changed
+        if (previousMod != Mod || previousIntegration != Integration)
+        {
+            encodedImage = null;
+            encodedIcon = null;
+
+            previousMod = Mod;
+            previousIntegration = Integration;
+
+            base.InvokeAsync(async () =>
+            {
+                await Task.Delay(1);
+                await ReloadAsync();
+                StateHasChanged();
+            });
+        }
     }
 }

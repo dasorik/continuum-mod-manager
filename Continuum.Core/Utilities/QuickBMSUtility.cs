@@ -44,10 +44,11 @@ namespace Continuum.Core.Utilities
 
 				Logger.Log($"Finished extracting: {inputPath}", LogSeverity.Info);
 			}
-			catch (Exception ex)
-			{
-				Console.Write($"[ERROR - QUICKBMS]: {ex}");
-			}
-		}
+            catch (Exception ex)
+            {
+                Logger.Log($"[ERROR - QUICKBMS]: {ex}", LogSeverity.Error);
+                throw;
+            }
+        }
 	}
 }

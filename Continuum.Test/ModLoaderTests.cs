@@ -3,6 +3,7 @@ using Continuum.Core.Enums;
 using Continuum.Core.InstallActions;
 using Continuum.Core.Models;
 using Continuum.Core.Test;
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -48,11 +49,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -69,12 +70,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("DeleteFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("DeleteFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -94,12 +95,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("DeleteFiles - TargetFiles: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("DeleteFiles - TargetFiles: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -119,12 +120,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("DeleteFiles - TargetFiles: One or more target files were NULL or Empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("DeleteFiles - TargetFiles: One or more target files were NULL or Empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -144,12 +145,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("DeleteFiles - TargetFiles: One or more target files were NULL or Empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("DeleteFiles - TargetFiles: One or more target files were NULL or Empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -166,12 +167,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("DeleteFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("DeleteFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 
@@ -191,11 +192,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -212,12 +213,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -234,12 +235,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -256,12 +257,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -278,12 +279,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -300,12 +301,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFile - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFile - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 
@@ -326,11 +327,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -348,12 +349,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - TargetPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - TargetPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -371,12 +372,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -394,12 +395,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -417,12 +418,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -440,12 +441,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -463,12 +464,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -486,12 +487,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("MoveFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("MoveFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 
@@ -511,11 +512,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -532,11 +533,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -553,12 +554,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -575,12 +576,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFile - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -597,12 +598,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -619,12 +620,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFile - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFile - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 
@@ -645,11 +646,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -667,11 +668,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -689,12 +690,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -712,12 +713,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - DestinationPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -735,12 +736,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -758,12 +759,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - DestinationPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -781,12 +782,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -804,12 +805,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("CopyFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("CopyFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 
@@ -829,12 +830,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFile - ReplacementFile: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFile - ReplacementFile: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -851,11 +852,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -872,12 +873,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFile - ReplacementFile: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFile - ReplacementFile: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -894,12 +895,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -916,12 +917,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -938,12 +939,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFile - ReplacementFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFile - ReplacementFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 
@@ -964,11 +965,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -986,11 +987,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1008,12 +1009,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - ReplacementPath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - ReplacementPath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1031,12 +1032,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - TargetPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - TargetPath: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1054,12 +1055,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - ReplacementPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - ReplacementPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1077,12 +1078,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - TargetPath: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1100,12 +1101,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1123,12 +1124,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ReplaceFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ReplaceFiles - FileFilter: Provided path must not be NULL or empty (This is a regex pattern expression, eg. \".*\")", result.First().loadErrors.First());
 		}
 
 
@@ -1155,11 +1156,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1183,11 +1184,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1211,11 +1212,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1239,12 +1240,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - DataFilePath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - DataFilePath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1268,12 +1269,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - DataFilePath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - DataFilePath: Provided path must be in the [MOD] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1298,12 +1299,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - DataFilePath: File write action must provide either 'Text' or 'DataFilePath' properties, not both", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - DataFilePath: File write action must provide either 'Text' or 'DataFilePath' properties, not both", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1326,12 +1327,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - DataFilePath: File write action must provide either 'Text' or 'DataFilePath' properties", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - DataFilePath: File write action must provide either 'Text' or 'DataFilePath' properties", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1348,12 +1349,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - Content: No items provided in 'Content' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - Content: No items provided in 'Content' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1370,12 +1371,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - Content: No items provided in 'Content' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - Content: No items provided in 'Content' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1398,12 +1399,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1426,12 +1427,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - TargetFile: Provided path must not be NULL or empty", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1454,12 +1455,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("WriteToFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("WriteToFile - TargetFile: Provided path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		// Quick BMS Extract
@@ -1477,11 +1478,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1497,12 +1498,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("QuickBMSExtract - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("QuickBMSExtract - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1518,12 +1519,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("QuickBMSExtract - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("QuickBMSExtract - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1539,12 +1540,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("QuickBMSExtract - TargetFiles: All provided paths for QuickBMS extraction must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("QuickBMSExtract - TargetFiles: All provided paths for QuickBMS extraction must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		// Unluac Decompile
@@ -1562,11 +1563,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		[Test]
@@ -1582,12 +1583,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnluacDecompile - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnluacDecompile - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1603,12 +1604,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnluacDecompile - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnluacDecompile - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1624,12 +1625,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnluacDecompile - TargetFiles: All provided paths for Unluac decompile must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnluacDecompile - TargetFiles: All provided paths for Unluac decompile must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		// Zip Files
@@ -1647,12 +1648,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - FilesToInclude: No items provided in 'FilesToInclude' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - FilesToInclude: No items provided in 'FilesToInclude' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1668,12 +1669,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - FilesToInclude: No items provided in 'FilesToInclude' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - FilesToInclude: No items provided in 'FilesToInclude' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1692,12 +1693,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - FilesToInclude: All provided paths for inclusion in the zip archive must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - FilesToInclude: All provided paths for inclusion in the zip archive must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1716,12 +1717,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - FilesToInclude: All provided paths for inclusion in the zip archive must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - FilesToInclude: All provided paths for inclusion in the zip archive must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1741,12 +1742,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1766,12 +1767,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1791,12 +1792,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipFiles - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipFiles - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1817,11 +1818,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		// Zip Directory
@@ -1839,12 +1840,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be supplied", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be supplied", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1860,12 +1861,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1881,12 +1882,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DirectoryPath: Directory path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1903,12 +1904,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1925,12 +1926,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1947,12 +1948,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("ZipDirectory - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("ZipDirectory - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -1969,11 +1970,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		// Unzip File
@@ -1991,12 +1992,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - TargetFile: Target file must be supplied", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - TargetFile: Target file must be supplied", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2012,12 +2013,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - TargetFile: Target file must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - TargetFile: Target file must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2033,12 +2034,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - TargetFile: Target file must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - TargetFile: Target file must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2055,12 +2056,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - DestinationPath: Destination path must be supplied", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2077,12 +2078,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2099,12 +2100,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFile - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFile - DestinationPath: Destination path must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2121,11 +2122,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 
 		// Unzip Files
@@ -2143,12 +2144,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2164,12 +2165,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFiles - TargetFiles: No items provided in 'TargetFiles' list", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2185,12 +2186,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFiles - TargetFiles: All provided paths for unzip must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFiles - TargetFiles: All provided paths for unzip must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2206,12 +2207,12 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
-			Assert.AreEqual("UnzipFiles - TargetFiles: All provided paths for unzip must be in the [GAME] folder", result.First().loadErrors.First());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.ConfigInvalid, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual("UnzipFiles - TargetFiles: All provided paths for unzip must be in the [GAME] folder", result.First().loadErrors.First());
 		}
 
 		[Test]
@@ -2227,11 +2228,11 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var modLoader = new ModLoader(modCacheFolder, new[] { this.integration });
+			var modLoader = new ModLoader(new[] { this.integration });
 			var result = modLoader.Load(modPath);
 
-			Assert.AreEqual(1, result.Count());
-			Assert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
+			ClassicAssert.AreEqual(1, result.Count());
+			ClassicAssert.AreEqual(LoadStatus.Success, result.First().status, result.First().loadErrors.FirstOrDefault());
 		}
 	}
 }

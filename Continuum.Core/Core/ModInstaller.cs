@@ -3,6 +3,7 @@ using Continuum.Core.Enums;
 using Continuum.Core.InstallActions;
 using Continuum.Core.Models;
 using Continuum.Core.Utilities;
+using DeltaQ.SuffixSorting.LibDivSufSort;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1051,7 +1052,8 @@ namespace Continuum.Core
 
 			using (FileStream stream = File.OpenWrite(backupPath))
 			{
-				deltaq.BsDiff.BsDiff.Create(file2Data, file1Data, stream);
+                var suffixSorter = new LibDivSufSort();
+                DeltaQ.BsDiff.Diff.Create(file1Data, file2Data, stream, suffixSorter);
 			}
 		}
 
@@ -1155,7 +1157,7 @@ namespace Continuum.Core
 						using (var outputStream = new MemoryStream())
 						{
 							byte[] patchData = File.ReadAllBytes(patch);
-							deltaq.BsDiff.BsPatch.Apply(patchedFileBytes, patchData, outputStream);
+							DeltaQ.BsDiff.Patch.Apply(patchedFileBytes, patchData, outputStream);
 
 							// Update the patchedFile bytes to include the last patch
 							patchedFileBytes = outputStream.ToArray();

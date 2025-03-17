@@ -2,6 +2,7 @@
 using Continuum.Core.Enums;
 using Continuum.Core.Models;
 using Continuum.GUI;
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -78,10 +79,10 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasEditCollision(mod, exampleFile1, content, fileWriter, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Delete");
-			Assert.IsTrue(collision.description.Contains("Attempting to write to a file that has been deleted by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Delete");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to write to a file that has been deleted by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -96,10 +97,10 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasEditCollision(mod, exampleFile1, content, fileWriter, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Move");
-			Assert.IsTrue(collision.description.Contains("Attempting to write to a file that has been moved by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Move");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to write to a file that has been moved by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -114,10 +115,10 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasEditCollision(mod, exampleFile1, content, fileWriter, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Move");
-			Assert.IsTrue(collision.description.Contains("Attempting to write to a file that has been replaced by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Move");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to write to a file that has been replaced by another mod"), $"Actual: {collision.description}");
 		}
 
 
@@ -132,10 +133,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Move");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been moved by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Move");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been moved by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -147,7 +148,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -160,10 +161,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile2, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Move");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been added by another mod (with different data)"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Move");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been added by another mod (with different data)"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -176,7 +177,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleDestination3_exampleDestination1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -188,10 +189,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Delete");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been deleted by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Delete");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been deleted by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -203,10 +204,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Replace");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been replaced by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Replace");
+			ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been replaced by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -218,7 +219,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleDestination1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -230,10 +231,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile1, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Edit");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been written to by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Edit");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been written to by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -245,7 +246,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move2" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleDestination1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -257,10 +258,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile2, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Add");
-			Assert.IsTrue(collision.description.Contains("Attempting to move a file that has been added by another mod (with different data)"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Add");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to move a file that has been added by another mod (with different data)"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -272,7 +273,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Move" });
 			bool hasCollision = ModCollisionTracker.HasMoveCollision(mod, exampleFile3, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		// File Replacements
@@ -286,10 +287,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace" });
 			bool hasCollision = ModCollisionTracker.HasReplaceCollision(mod, exampleFile1, exampleFile2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Move");
-			Assert.IsTrue(collision.description.Contains("Attempting to replace a file that has been moved by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Move");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to replace a file that has been moved by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -301,10 +302,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace" });
 			bool hasCollision = ModCollisionTracker.HasReplaceCollision(mod, exampleFile1, exampleFile2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Delete");
-			Assert.IsTrue(collision.description.Contains("Attempting to replace a file that has been deleted by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Delete");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to replace a file that has been deleted by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -316,10 +317,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace" });
 			bool hasCollision = ModCollisionTracker.HasReplaceCollision(mod, exampleFile1, exampleFile2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Edit");
-			Assert.IsTrue(collision.description.Contains("Attempting to replace a file that has been written to by another mod"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Edit");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to replace a file that has been written to by another mod"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -331,10 +332,10 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace2" });
 			bool hasCollision = ModCollisionTracker.HasReplaceCollision(mod, exampleFile1, testFile2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Replace1");
-			Assert.IsTrue(collision.description.Contains("Attempting to replace a file that has been replaced by another mod (with different data)"), $"Actual: {collision.description}");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Replace1");
+            ClassicAssert.IsTrue(collision.description.Contains("Attempting to replace a file that has been replaced by another mod (with different data)"), $"Actual: {collision.description}");
 		}
 
 		[Test]
@@ -346,7 +347,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace2" });
 			bool hasCollision = ModCollisionTracker.HasReplaceCollision(mod, exampleFile1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		// Zip
@@ -362,7 +363,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -377,7 +378,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -392,7 +393,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -406,7 +407,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -420,7 +421,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -434,7 +435,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -449,7 +450,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -464,7 +465,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -478,7 +479,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -492,7 +493,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -506,7 +507,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -520,7 +521,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		[Test]
@@ -537,7 +538,7 @@ namespace Continuum.Core.Test
 
 			bool hasCollision = ModCollisionTracker.HasZipCollision(mod, files, exampleFile3, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		// Unzip
@@ -551,7 +552,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Unzip" });
 			bool hasCollision = ModCollisionTracker.HasUnzipCollision(mod, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -563,7 +564,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Unzip" });
 			bool hasCollision = ModCollisionTracker.HasUnzipCollision(mod, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -575,7 +576,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Unzip" });
 			bool hasCollision = ModCollisionTracker.HasUnzipCollision(mod, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -587,7 +588,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Replace2" });
 			bool hasCollision = ModCollisionTracker.HasUnzipCollision(mod, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(true, hasCollision);
 		}
 
 		[Test]
@@ -599,7 +600,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Unzip" });
 			bool hasCollision = ModCollisionTracker.HasUnzipCollision(mod, exampleFile1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		// File Copies
@@ -613,7 +614,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy2" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		public void CheckFileCopyWithAdd_DifferentSourceFile()
@@ -624,9 +625,9 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy2" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination2, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Copy1");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Copy1");
 		}
 
 		public void CheckFileCopyWithReplace_DifferentContents()
@@ -637,9 +638,9 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Replace");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Replace");
 		}
 
 		public void CheckFileCopyWithReplace_SameContents()
@@ -650,7 +651,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		public void CheckFileCopyWithDelete()
@@ -661,7 +662,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination2, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 
 		public void CheckFileCopyWithMove()
@@ -673,9 +674,9 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Add");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Add");
 		}
 
 		public void CheckFileCopyWithEdit_DifferentContents()
@@ -686,9 +687,9 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination2, actions, out var collision);
 
-			Assert.AreEqual(true, hasCollision);
-			Assert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
-			Assert.AreEqual(collision.modID, "Test.Edit");
+			ClassicAssert.AreEqual(true, hasCollision);
+			ClassicAssert.AreEqual(collision.severity, ModCollisionSeverity.Clash);
+			ClassicAssert.AreEqual(collision.modID, "Test.Edit");
 		}
 
 		public void CheckFileCopyWithEdit_SameContents()
@@ -699,7 +700,7 @@ namespace Continuum.Core.Test
 			var mod = GetModInstallationInfo(new ModConfiguration() { ModID = "Test.Copy" });
 			bool hasCollision = ModCollisionTracker.HasCopyCollision(mod, exampleDestination1, exampleDestination3_exampleDestination1, actions, out var collision);
 
-			Assert.AreEqual(false, hasCollision);
+			ClassicAssert.AreEqual(false, hasCollision);
 		}
 	}
 }

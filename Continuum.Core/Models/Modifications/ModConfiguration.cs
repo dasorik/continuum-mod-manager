@@ -7,59 +7,62 @@ using System.Linq;
 
 namespace Continuum.Core.Models
 {
-	public class ModConfiguration : IVersionLoadableData
-	{
-		public string ModID;
-		public string Version;
-		public ModContributor Author;
-		public ModContributor[] Contributors;
-		public string DisplayName;
-		public string DisplayImage;
-		public string DisplayBackground;
-		public string Description;
-		public LinkedIntegration[] LinkedIntegrations;
-		public ModInstallAction[] InstallActions;
-		public ModSettingCategory[] Settings;
+    public class ModConfiguration : BaseConfiguration
+    {
+        public string ModID;
+        public LinkedIntegration[] LinkedIntegrations;
+        public ModInstallAction[] InstallActions;
+        public ModSettingCategory[] Settings;
+        public string[] ModDependencies;
 
-		// Cached data
-		[JsonIgnore] public string CacheFolder { get; set; }
-		[JsonIgnore] public string ID => ModID;
+        // Cached data
+        [JsonIgnore] public override string CacheFolder { get; set; }
+        [JsonIgnore] public override string ID => ModID;
+        [JsonIgnore] public override string Type => "Mod";
 
-		public override string ToString()
-		{
-			return $"[Mod: {ModID}]";
-		}
-	}
 
-	public class ModContributor
-	{
-		public string Name;
-		public string Role;
-	}
+        public override string ToString()
+        {
+            return $"[Mod: {ModID}]";
+        }
+    }
 
-	public static class ModConfigurationExtensions
-	{
-		public static string GetRelativePath(this ModConfiguration mod, string path)
-		{
-			return System.IO.Path.Combine(mod.CacheFolder, path);
-		}
+    public class ModContributor
+    {
+        public string Name;
+        public string Role;
+    }
 
-		public static bool CompatibleWith(this ModConfiguration mod, GameIntegration integration)
-		{
-			foreach (var link in mod.LinkedIntegrations)
-			{
-				if (link.IntegrationID.Equals(integration.IntegrationID, System.StringComparison.InvariantCultureIgnoreCase))
-				{
-					return VersionUtility.CompatibleWithVersion(new VersionCompatibleObject(link.TargetVersion, link.MinimumVersion), new VersionedObject(integration.Version, integration.MinimumApplicationVersion));
-				}
-			}
+    public class UpdateKeys
+    {
+        public string Nexus;
+        public string GitHub; // Unused, for now
+        public string GameBanana;
+    }
 
-			return false;
-		}
+    public static class ModConfigurationExtensions
+    {
+        public static string GetRelativePath(this ModConfiguration mod, string path)
+        {
+            return System.IO.Path.Combine(mod.CacheFolder, path);
+        }
 
-		public static string GetCategoryForIntegration(this ModConfiguration mod, GameIntegration integration)
-		{
-			return mod.LinkedIntegrations.FirstOrDefault(li => li.IntegrationID.Equals(integration.IntegrationID, StringComparison.InvariantCultureIgnoreCase))?.ModCategory;
-		}
-	}
+        public static bool CompatibleWith(this ModConfiguration mod, GameIntegration integration)
+        {
+            foreach (var link in mod.LinkedIntegrations)
+            {
+                if (link.IntegrationID.Equals(integration.IntegrationID, System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return VersionUtility.CompatibleWithVersion(new VersionCompatibleObject(link.TargetVersion, link.MinimumVersion), new VersionedObject(integration.Version, integration.MinimumApplicationVersion));
+                }
+            }
+
+            return false;
+        }
+
+        public static string GetCategoryForIntegration(this ModConfiguration mod, GameIntegration integration)
+        {
+            return mod.LinkedIntegrations.FirstOrDefault(li => li.IntegrationID.Equals(integration.IntegrationID, StringComparison.InvariantCultureIgnoreCase))?.ModCategory;
+        }
+    }
 }

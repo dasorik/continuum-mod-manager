@@ -1,0 +1,102 @@
+﻿@using Continuum.GUI.Models;
+@using Continuum.Common;
+@using Continuum.Core.Enums;
+@using Continuum.Core.Models;
+
+<tr>
+    <td>
+        @if (!string.IsNullOrWhiteSpace(Setting.Setting.Description))
+        {
+            <span class="setting-name" title="@Setting.Setting.Description">@Setting.Setting.SettingName</span>
+        }
+        else
+        {
+            <span class="setting-name">@Setting.Setting.SettingName</span>
+        }
+    </td>
+    <td>
+        <div class="validation-error-placeholder">
+            @if (response?.IsError ?? false)
+            {
+                <div class="validation-error" title="@(response?.Message ?? string.Empty)">
+                    <img src="img/alert-error.svg" />
+                </div>
+            }
+        </div>
+        <div class="locked-setting-placeholder">
+            @if (Disabled || IsLocked)
+            {
+                <div class="locked-setting" title="This setting is locked and cannot be edited">
+                    <img src="img/icon-locked.svg" />
+                </div>
+            }
+        </div>
+    </td>
+    <td class="right-align @(response?.IsError ?? false ? " validation-error" : "" )">
+        @if (Setting.Setting.Type == ModSettingType.Checkbox)
+        {
+            <CustomCheckbox Disabled="@(Disabled || IsLocked)" Checked="BoolValue" OnCheckChanged="((e) => SetValue(e))"></CustomCheckbox>
+        }
+        else if (Setting.Setting.Type == ModSettingType.DropDown)
+        {
+            <select disabled="@(Disabled || IsLocked)" type="text" class="select-box" @bind-value="@StringValue" @bind-value:event="onchange" @oninput="@(e => SetValue(e.Value))">
+                @foreach (var modOption in Setting.Setting.Options)
+                {
+                    <option value="@modOption.Value">@modOption.Text</option>
+                }
+            </select>
+        }
+        else if (Setting.Setting.Type == ModSettingType.Text)
+        {
+            <input disabled="@(Disabled || IsLocked)" type="text" class="text-box full" @bind-value="@StringValue" @bind-value:event="onchange" @oninput="@(e => SetValue(e.Value))" />
+        }
+    </td>
+</tr>
+
+@code {
+    [Parameter] public ModSettingDTO Setting { get; set; }
+    [Parameter] public bool IsLocked { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback<bool> OnSettingChanged { get; set; }
+
+    protected bool BoolValue
+    {
+        get => (bool)Setting?.Value;
+    }
+
+    private string? StringValue
+    {
+        get => Setting?.Value?.ToString();
+        set
+        {
+            if (value != null)
+            {
+                Setting.Value = value;
+            }
+        }
+    }
+
+    private ValidationResponse response = null;
+
+    protected override void OnInitialized()
+    {
+        if (Setting != null)
+        {
+            ValidateSetting();
+            OnSettingChanged.InvokeAsync(true);
+        }
+    }
+
+    void SetValue(object value)
+    {
+        Setting.Value = value;
+        ValidateSetting();
+        OnSettingChanged.InvokeAsync(false);
+    }
+
+    void ValidateSetting()
+    {
+        response = Setting.Setting.ValidateSetting(Setting.Value);
+        Setting.IsValid = !response.IsError;
+    }
+}

@@ -1,3 +1,4 @@
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using Continuum.Core.Models;
 using Continuum.Core.Utilities;
@@ -21,7 +22,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("4.*")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+			ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -39,7 +40,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("4.1")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -57,7 +58,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("4.1")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -75,7 +76,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("4.1")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -93,7 +94,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("4.3")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -109,7 +110,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("6.3"),
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -125,7 +126,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("6.3"),
 			};
 
-			Assert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -141,7 +142,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("6.3"),
 			};
 
-			Assert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -159,7 +160,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("3.5")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -177,7 +178,7 @@ namespace Continuum.Core.Test
 				minimumSupportedVersion = new VersionInfo("3.*")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -194,7 +195,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("4.0")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -211,7 +212,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("4.0")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -228,7 +229,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("3.9")
 			};
 
-			Assert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -245,7 +246,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("3.9")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -262,7 +263,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("5.1")
 			};
 
-			Assert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -280,7 +281,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("5.1")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -297,7 +298,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("5.1")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -314,7 +315,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("5.1")
 			};
 
-			Assert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsFalse(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 
 		[Test]
@@ -331,7 +332,7 @@ namespace Continuum.Core.Test
 				currentVersion = new VersionInfo("1.0")
 			};
 
-			Assert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
+            ClassicAssert.IsTrue(VersionUtility.CompatibleWithVersion(versionInfo, checkInfo));
 		}
 	}
 }

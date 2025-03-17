@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Continuum.Common.Utilities
 {
 	public class Base64Utility
 	{
-		public static string ConvertFileToBase64(string filePath)
+		public static async Task<string> ConvertFileToBase64Async(string filePath)
 		{
 			if (!File.Exists(filePath))
 				return string.Empty;
 
 			var imageFileInfo = new FileInfo(filePath);
-			var imageBytes = File.ReadAllBytes(imageFileInfo.FullName);
+			var imageBytes = await File.ReadAllBytesAsync(imageFileInfo.FullName);
 
 			string fileExtension = imageFileInfo.Extension.TrimStart('.');
 			string mimeType = fileExtension;

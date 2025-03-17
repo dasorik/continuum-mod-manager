@@ -1,0 +1,12 @@
+﻿<div class="mod-section-header small flex-container">
+    <span>@CategoryName</span><hr />
+</div>
+
+<table>
+    @ChildContent
+</table>
+
+@code {
+    [Parameter] public string CategoryName { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

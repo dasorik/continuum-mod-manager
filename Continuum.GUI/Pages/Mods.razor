@@ -55,8 +55,12 @@
     </select>
 </div>
 
-@{var installedMods = @GetFilteredList(true);}
-@{var availableMods = @GetFilteredList(false);}
+@{
+    var installedMods = @GetFilteredList(true);
+}
+@{
+    var availableMods = @GetFilteredList(false);
+}
 
 <div class="mod-section">
 
@@ -81,7 +85,7 @@
                         }
 
                         <ContextMenuTrigger MenuId="@contextID" CssClass="blazor-context-menu-area">
-                            <ModIcon Mod="mod" IconPath="@modService.GetModIcon(integration, mod)" Installed="@modService.IsModInstalled(integration, mod)" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Installed(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(true)"></ModIcon>
+                            <ModIcon Mod="mod" Integration="integration" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Installed(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(true)"></ModIcon>
                         </ContextMenuTrigger>
                     }
                 }
@@ -110,7 +114,7 @@
                         }
 
                         <ContextMenuTrigger MenuId="@contextID" CssClass="blazor-context-menu-area">
-                            <ModIcon Mod="mod" IconPath="@modService.GetModIcon(integration, mod)" Installed="@modService.IsModInstalled(integration, mod)" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Uninstalled(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(false)"></ModIcon>
+                            <ModIcon Mod="mod" Integration="integration" OnClick="m => SelectMod(m)" OnCheckboxClick="m => SelectMultiSelect_Uninstalled(m)" Selected="@selectedMods.Contains(mod)" MultiSelectEnabled="CanShowMultiSelectElements(false)"></ModIcon>
                         </ContextMenuTrigger>
                     }
                 }
@@ -292,10 +296,10 @@
                 return groupedMods.SelectMany(g => g.OrderBy(grp => GetSortComparisonOption(grp).ToUpper().Trim()));
             }
             else
-			{
+            {
                 var groupedMods = filteredMods.GroupBy(m => GetGroupComparisonOption(m).ToUpper().Trim()).OrderByDescending(m => m.Key);
                 return groupedMods.SelectMany(g => g.OrderByDescending(grp => GetSortComparisonOption(grp).ToUpper().Trim()));
-			}
+            }
         }
     }
 
@@ -326,23 +330,23 @@
         if (!modService.IntegrationSettingsAreValid(integration))
         {
             toastService.AddToast(new ToastData()
-            {
-                message = "Some integration settings have not been set up, click to set up now",
-                canClose = false,
-                level = AlertLevel.Warning,
-                contextButton = new ToastDataContextButton(() => dialogService.ShowOptionsPopup(SettingsTab.Integration), "Settings")
-            });
+                {
+                    message = "Some integration settings have not been set up, click to set up now",
+                    canClose = false,
+                    level = AlertLevel.Warning,
+                    contextButton = new ToastDataContextButton(() => dialogService.ShowOptionsPopup(SettingsTab.Integration), "Settings")
+                });
         }
 
         if (modService.RequiresSetUp(integration))
         {
             toastService.AddToast(new ToastData()
-            {
-                message = "Your game installation needs to be configured before mods can be installed. Click to set up now",
-                canClose = false,
-                level = AlertLevel.Info,
-                contextButton = new ToastDataContextButton(() => TrySetUpProject(), "Set Up")
-            });
+                {
+                    message = "Your game installation needs to be configured before mods can be installed. Click to set up now",
+                    canClose = false,
+                    level = AlertLevel.Info,
+                    contextButton = new ToastDataContextButton(() => TrySetUpProject(), "Set Up")
+                });
         }
     }
 
@@ -378,11 +382,11 @@
                     {
                         case Services.ModSetUpStatus.Success:
                             toastService.AddToast(new ToastData()
-                            {
-                                message = "Set up complete!",
-                                canClose = true,
-                                level = AlertLevel.Info
-                            });
+                                {
+                                    message = "Set up complete!",
+                                    canClose = true,
+                                    level = AlertLevel.Info
+                                });
                             break;
                         case Services.ModSetUpStatus.SetUpFailed:
                             dialogService.ShowAlertDialog(
@@ -434,16 +438,10 @@
             return;
         }
 
-        byte[] fileBytes;
-        string fileName;
+        using MemoryStream memoryStream = await fileReference.CreateMemoryStreamAsync(4096);
+        string fileName = (await fileReference.ReadFileInfoAsync()).Name;
 
-        using (MemoryStream memoryStream = await fileReference.CreateMemoryStreamAsync(4096))
-        {
-            fileBytes = memoryStream.ToArray();
-            fileName = (await fileReference.ReadFileInfoAsync()).Name;
-        }
-
-        var result = modService.TryAddMod(fileName, fileBytes);
+        var result = await modService.TryAddMod(fileName, memoryStream);
         var errorMessage = result.loadErrors.FirstOrDefault() ?? "An unknown error occurred";
 
         if (result.status != LoadStatus.Success)

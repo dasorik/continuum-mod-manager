@@ -1,17 +1,19 @@
 ﻿@using Continuum.Common.Utilities;
 @using Continuum.Core.Models;
 
-<div id="mod-button-@Integration.IntegrationID" class="mod-icon-parent integration" @onclick="@RouteMainAction">
-    <div class="mod-icon integration">
-        @{var path = Integration.GetRelativePath(Integration.DisplayImage);}
-        <img src="@Base64Utility.ConvertFileToBase64(path)" class="vertical-align unselectable" />
-    </div>
+@if (encodedImage != null)
+{
+    <div id="mod-button-@Integration.IntegrationID" class="mod-icon-parent integration" @onclick="@RouteMainAction">
+        <div class="mod-icon integration">
+            <img src="@encodedImage" class="vertical-align unselectable" />
+        </div>
 
-    <div class="button-title-banner">
-        <span class="button-title">@Integration.DisplayName</span>
-        <span class="button-author">@Available available / @Installed installed</span>
+        <div class="button-title-banner">
+            <span class="button-title">@Integration.DisplayName</span>
+            <span class="button-author">@Available available / @Installed installed</span>
+        </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter] public Continuum.Core.Models.GameIntegration Integration { get; set; }
@@ -19,8 +21,27 @@
     [Parameter] public int Available { get; set; }
     [Parameter] public EventCallback<string> OnClick { get; set; }
 
+    private string encodedImage = null;
+
+    private async Task ReloadAsync()
+    {
+        encodedImage = await Base64Utility.ConvertFileToBase64Async(Integration.GetRelativePath(Integration.DisplayImage));
+    }
+
     protected async void RouteMainAction()
     {
         await OnClick.InvokeAsync(Integration.IntegrationID);
+    }
+
+    protected override void OnParametersSet()
+    {
+        encodedImage = null;
+
+        base.InvokeAsync(async () =>
+        {
+            await Task.Delay(1);
+            await ReloadAsync();
+            StateHasChanged();
+        });
     }
 }

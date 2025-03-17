@@ -11,13 +11,19 @@
         <div class="popup-large-details" @onclick:stopPropagation="true">
             <div class="mod-details-header-img">
                 <div class="vertical-align-helper"></div>
-                <img src="@Base64Utility.ConvertFileToBase64(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayBackground ?? Config.selectedMod.DisplayImage))" class="vertical-align unselectable" />
+                @if (encodedBanner != null)
+                {
+                    <img src="@encodedBanner" class="vertical-align unselectable" />
+                }
                 <div class="black-fade"></div>
             </div>
             <div class="large-vertical-split">
                 <div class="details-left-column mod">
                     <div class="mod-details-icon">
-                        <img src="@Base64Utility.ConvertFileToBase64(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayImage))" class="vertical-align unselectable" />
+                        @if (encodedImage != null)
+                        {
+                            <img src="@encodedImage" class="vertical-align unselectable" />
+                        }
                     </div>
                 </div>
                 <div class="details-right-column pad-left">
@@ -140,29 +146,41 @@
     protected ActiveTab activeTab = ActiveTab.Details;
     bool enableSave = false;
 
-    private ModSettingCategoryDTO[] settings;
+    private string encodedBanner = null;
+    private string encodedImage = null;
+
+    private ModSettingDTO[] settings;
 
     protected override void OnInitialized()
     {
-        if (Config.selectedMod.Settings != null)
-        {
-            var settingsList = new List<ModSettingCategoryDTO>();
+        base.OnInitialized();
 
+        var tempSettings = new List<ModSettingDTO>();
+
+        if (Config?.selectedMod?.Settings != null)
+        {
             foreach (var category in Config.selectedMod.Settings)
             {
-                var settingsDTO = category.Settings.Select(s => new ModSettingDTO(s, modService.Settings.GetModOptions(Config.selectedMod.ModID, s.SettingID).Value)).ToArray();
-                settingsList.Add(new ModSettingCategoryDTO(category.Category, settingsDTO));
+                tempSettings.AddRange(category.Settings.Select(s => new ModSettingDTO(s, category.Category, modService.Settings.GetModOptions(Config.selectedMod.ModID, s.SettingID).Value)));
             }
-
-            settings = settingsList.ToArray();
         }
+
+        this.settings = tempSettings.ToArray();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        encodedBanner = await Base64Utility.ConvertFileToBase64Async(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayBackground ?? Config.selectedMod.DisplayImage));
+        encodedImage = await Base64Utility.ConvertFileToBase64Async(Config.selectedMod.GetRelativePath(Config.selectedMod.DisplayImage));
     }
 
     void SaveSettings()
     {
         foreach (var category in settings)
         {
-            foreach (var setting in category.Settings)
+            foreach (var setting in settings)
             {
                 modService.Settings.SetModOption(Config.selectedMod.ModID, setting.SettingID, setting.Value);
             }
@@ -174,7 +192,7 @@
 
     bool SaveButtonDisabled()
     {
-        return !enableSave || (settings.SelectMany(c => c.Settings)?.Any(s => !s.IsValid) ?? false);
+        return !enableSave || (settings?.Any(s => !s.IsValid) ?? false);
     }
 
     protected async void RouteInstallAction()

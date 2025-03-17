@@ -10,7 +10,8 @@
   "profiles": {
     "Electron.NET App": {
       "commandName": "Executable",
-      "executablePath": "electronize start",
+      "executablePath": "C:\\Windows\\System32\\cmd.exe",
+      "commandLineArgs": "/c electronize start",
       "workingDirectory": "$(ProjectDir)"
     },
     "ContinuumModManager": {

@@ -1,3 +1,4 @@
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using Continuum.GUI.Models;
@@ -15,7 +16,7 @@ namespace Continuum.Core.Test
 			string json = JsonConvert.SerializeObject(cache);
 			var newCache = JsonConvert.DeserializeObject<FileModificationCache>(json);
 
-			Assert.IsTrue(newCache.HasModification("test\\test.txt", Models.FileModificationType.Moved));
+			ClassicAssert.IsTrue(newCache.HasModification("test\\test.txt", Models.FileModificationType.Moved));
 		}
 
 		[Test]
@@ -35,8 +36,8 @@ namespace Continuum.Core.Test
 			string json = JsonConvert.SerializeObject(data);
 			var newData = JsonConvert.DeserializeObject<UserModData>(json);
 
-			Assert.AreEqual("test.gameid", newData.GetIntegration("test.gameid")?.IntegrationID);
-			Assert.IsTrue(newData.GetIntegration("test.gameid").IntegrationFileModifications.HasModification("test\\test.txt", Models.FileModificationType.Moved));
+            ClassicAssert.AreEqual("test.gameid", newData.GetIntegration("test.gameid")?.IntegrationID);
+			ClassicAssert.IsTrue(newData.GetIntegration("test.gameid").IntegrationFileModifications.HasModification("test\\test.txt", Models.FileModificationType.Moved));
 		}
 
 		[Test]
@@ -56,8 +57,8 @@ namespace Continuum.Core.Test
 			string json = JsonConvert.SerializeObject(data);
 			var newData = JsonConvert.DeserializeObject<UserModData>(json);
 
-			Assert.AreEqual("test.gameid", newData.GetIntegration("test.gameid")?.IntegrationID);
-			Assert.IsTrue(newData.GetIntegration("test.gameid").ModFileModifications.HasModification("test\\test.txt", Models.FileModificationType.Moved));
+            ClassicAssert.AreEqual("test.gameid", newData.GetIntegration("test.gameid")?.IntegrationID);
+			ClassicAssert.IsTrue(newData.GetIntegration("test.gameid").ModFileModifications.HasModification("test\\test.txt", Models.FileModificationType.Moved));
 		}
 	}
 }

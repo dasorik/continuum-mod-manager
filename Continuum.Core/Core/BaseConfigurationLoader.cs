@@ -9,25 +9,17 @@ using Continuum.Common.Logging;
 using Continuum.Core.Utilities;
 using Continuum.Core.Interfaces;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Continuum.Core
 {
-	public abstract class BaseConfigurationLoader<T> where T : IVersionLoadableData
+	public abstract class BaseConfigurationLoader<T> where T : BaseConfiguration
 	{
-		string cacheFolder;
-
 		protected abstract string FileExtension { get; }
 		protected abstract string DisplayName { get; }
 
-		public BaseConfigurationLoader(string cacheFolder)
-		{
-			this.cacheFolder = cacheFolder;
-		}
-
 		public IEnumerable<LoadResult<T>> Load(params string[] paths)
 		{
-			DirectoryUtility.DeleteAndRecreateFolder(cacheFolder);
-
 			var results = new List<LoadResult<T>>();
 
 			foreach (var path in paths)
@@ -50,45 +42,29 @@ namespace Continuum.Core
 		protected virtual LoadResult<T> TryLoad(FileInfo fileInfo)
 		{
 			T data = default(T);
-			string zipFile = null;
 
 			try
 			{
-				// Rename to .zip
-				zipFile = Path.ChangeExtension(fileInfo.FullName, ".zip");
-				File.Copy(fileInfo.FullName, zipFile);
+                var configPath = Path.Combine(fileInfo.FullName, "config.json");
 
-				if (fileInfo.Extension == $".{FileExtension}")
-				{
-					var extractFolder = Path.Combine(cacheFolder, fileInfo.Name);
+                if (!File.Exists(configPath))
+                    return new LoadResult<T>(fileInfo.Name, data, LoadStatus.NoConfig, $"No config file could be located for this {DisplayName}");
 
-					System.IO.Compression.ZipFile.ExtractToDirectory(zipFile, extractFolder);
+                var fileData = File.ReadAllText(configPath);
+                data = JsonConvert.DeserializeObject<T>(fileData, new ModInstallActionConverter(), new ModSettingValidatorConverter());
 
-					var configPath = Path.Combine(extractFolder, "config.json");
+                if (string.IsNullOrEmpty(data.ID))
+                    return new LoadResult<T>(fileInfo.Name, data, LoadStatus.ConfigInvalid, $"Unable to load {DisplayName} due to an invalid config file");
 
-					if (!File.Exists(configPath))
-						return new LoadResult<T>(fileInfo.Name, data, LoadStatus.NoConfig, $"No config file could be located for this {DisplayName}");
+                data.CacheFolder = fileInfo.FullName;
 
-					var fileData = File.ReadAllText(configPath);
-					data = JsonConvert.DeserializeObject<T>(fileData, new ModInstallActionConverter(), new ModSettingValidatorConverter());
+                var loadErrors = new List<string>();
+                PostValidationChecks(data, loadErrors);
 
-					if (string.IsNullOrEmpty(data.ID))
-						return new LoadResult<T>(fileInfo.Name, data, LoadStatus.ConfigInvalid, $"Unable to load {DisplayName} due to an invalid config file");
+                var result = new LoadResult<T>(fileInfo.Name, data, loadErrors.Any() ? LoadStatus.ConfigInvalid : LoadStatus.Success, loadErrors.ToArray());
+                FinalValidationChecks(data, ref result);
 
-					data.CacheFolder = extractFolder;
-
-					var loadErrors = new List<string>();
-					PostValidationChecks(data, loadErrors);
-
-					var result = new LoadResult<T>(fileInfo.Name, data, loadErrors.Any() ? LoadStatus.ConfigInvalid : LoadStatus.Success, loadErrors.ToArray());
-					FinalValidationChecks(data, ref result);
-
-					return result;
-				}
-				else
-				{
-					return new LoadResult<T>(fileInfo.Name, default(T), LoadStatus.ExtensionInvalid, $"The selected {DisplayName} is not a .{FileExtension} file");
-				}
+                return result;
 			}
 			catch (JsonReaderException ex)
 			{
@@ -100,15 +76,34 @@ namespace Continuum.Core
 				Logger.Log(ex.ToString(), LogSeverity.Error);
 				return new LoadResult<T>(fileInfo.Name, data, LoadStatus.UnspecifiedFailure, $"An error occurred trying to load the {DisplayName} - {ex?.Message}");
 			}
-			finally
-			{
-				if (!string.IsNullOrWhiteSpace(zipFile))
-					File.Delete(zipFile);
-			}
 		}
 
-		protected virtual void PostValidationChecks(T data, List<string> installErrors)
+		protected virtual void PostValidationChecks(T configuration, List<string> installErrors)
 		{
+			if (!Regex.IsMatch(configuration.ID, @"[a-zA-Z0-9_\-\.]"))
+				installErrors.Add($"{configuration.Type} ID can only contain alpha-numeric characters (a-z, 0-9), hypens (-), underscores (_) and dots (.)");
+
+			if (configuration.Version == null || !Regex.IsMatch(configuration.Version, @"\d+\.\d+"))
+				installErrors.Add($"{configuration.Type} version is not in the correct format (Expected {{major}}.{{minor}})");
+
+			// #TODO - Ensure this doesn't cause integrations to break
+			if (string.IsNullOrEmpty(configuration.DisplayImage))
+				installErrors.Add($"{configuration.Type} display image must be defined");
+
+			if (configuration.Author == null || string.IsNullOrWhiteSpace(configuration.Author.Name))
+				installErrors.Add($"Author name for {configuration.Type} cannot be blank");
+
+			if (configuration.Contributors != null && configuration.Contributors.Length > 0)
+				CheckAuthorsAreValid(configuration.Contributors, installErrors);
+		}
+
+		void CheckAuthorsAreValid(ModContributor[] contributors, List<string> installErrors)
+		{
+			foreach (var contributor in contributors)
+			{
+				if (string.IsNullOrWhiteSpace(contributor?.Name))
+					installErrors.Add("Contributor name cannot be blank");
+			}
 		}
 
 		protected virtual void FinalValidationChecks(T data, ref LoadResult<T> result)

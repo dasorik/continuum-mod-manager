@@ -1,11 +1,58 @@
 ﻿@page "/"
+
+@using Continuum.Common.Logging;
+@using ElectronNET.API;
+
 @inject NavigationManager navManager
+@inject Continuum.GUI.Services.UpdateCheckService updateCheckService;
+@inject Continuum.GUI.Services.ToastService toastService;
+@inject Continuum.GUI.Services.UpdateCheckService updateCheckService;
 
 <LoadingScreen></LoadingScreen>
 
 @code {
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        if (!updateCheckService.HasCheckedForUpdate)
+        {
+            _ = CheckForUpdate();
+            updateCheckService.HasCheckedForUpdate = true;
+        }
+
         navManager.NavigateTo("/integrations");
+    }
+
+    private async Task CheckForUpdate()
+    {
+        try
+        {
+            Version? currentVersion = updateCheckService.GetCurrentVersion();
+            Version? latestVersion = await updateCheckService.GetLatestGitHubReleaseVersion();
+
+            if (currentVersion != null && latestVersion != null)
+            {
+                if (currentVersion.CompareTo(latestVersion) < 0)
+                {
+                    toastService.AddToast(new ToastData()
+                        {
+                            message = $"A new version of Continuum is available - v{latestVersion.ToString(3)} (Installed Version - v{currentVersion.ToString(3)})",
+                            canClose = true,
+                            level = AlertLevel.Warning,
+                            contextButton = new ToastDataContextButton(async () => await ViewDownload(), "View")
+                        });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the error or handle it gracefully without affecting app load time
+            Logger.Log($"Update check failed: {ex.Message}", LogSeverity.Error);
+        }
+    }
+
+    private async Task ViewDownload()
+    {
+        var url = updateCheckService.GetRepoURL();
+        await Electron.Shell.OpenExternalAsync(url);
     }
 }

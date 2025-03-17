@@ -1,21 +1,32 @@
 {
   "executable": "Continuum.GUI",
   "splashscreen": {
-    "imageFile": "wwwroot/img/logo.png"
+    "imageFile": "wwwroot/img/splash.svg"
   },
   "name": "ContinuumModManager",
   "author": "Dasorik",
   "singleInstance": false,
   "build": {
     "appId": "com.continuum.dasorik.app",
-    "productName": "ContinuumModManager",
+    "productName": "Continuum Mod Manager",
     "copyright": "Copyright © 2022",
-    "buildVersion": "1.0.0",
+    "buildVersion": "1.2.0",
     "compression": "maximum",
     "directories": {
+      "buildResources": "resources",
       "output": "../../../bin/Desktop"
     },
-    "icon": "../../../wwwroot/icon.png",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    },
+    "win": {
+      "icon": "./bin/wwwroot/icons/icon.ico"
+    },
+    "linux": {
+      "icon": "./bin/wwwroot/icons"
+    },
     "extraResources": [
       {
         "from": "./bin",
@@ -23,7 +34,7 @@
         "filter": [ "**/*" ]
       },
       {
-        "from": "../../../../Tools",
+        "from": "../../../Tools",
         "to": "tools",
         "filter": [ "**/*" ]
       }

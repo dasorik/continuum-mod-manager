@@ -1,3 +1,4 @@
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using Continuum.Core.Models;
 
@@ -42,7 +43,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch(null);
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -60,7 +61,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("\"Test\" = \"Test\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -69,7 +70,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("true = \"Test\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -78,7 +79,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("45.67 = \"Test\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 
@@ -90,7 +91,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal = \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -99,7 +100,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal = \"Test Value2\"");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -108,7 +109,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal != \"Test Value2\"");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -117,7 +118,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal != \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -126,7 +127,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal <= \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -135,7 +136,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal >= \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -144,7 +145,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal < \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -153,7 +154,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal > \"Test Value\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -162,7 +163,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal = $MOD.test-setting");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -171,7 +172,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-equal = $MOD.test-setting6");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -180,7 +181,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting = $MOD.test-setting-bool");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -189,7 +190,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting = $INTEGRATION.test-setting");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -198,7 +199,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting = $INTEGRATION.test-setting6");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -207,7 +208,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting = $INTEGRATION.test-setting-bool");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 
@@ -219,7 +220,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = 56.67");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -228,7 +229,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = 56.68");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -237,7 +238,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal != 56.65");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -246,7 +247,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal != 56.67");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -255,7 +256,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal <= 56.68");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -264,7 +265,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal <= 56.67");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -273,7 +274,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal <= 56.65");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -282,7 +283,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal >= 56.68");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -291,7 +292,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal >= 56.67");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -300,7 +301,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal >= 56.65");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -309,7 +310,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal < 56.68");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -318,7 +319,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal < 56.67");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -327,7 +328,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal < 56.65");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -336,7 +337,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal > 56.68");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -345,7 +346,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal > 56.67");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -354,7 +355,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal > 56.65");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -363,7 +364,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $MOD.test-setting-decimal");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -372,7 +373,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $MOD.test-setting6");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -381,7 +382,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $MOD.test-setting-bool");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -390,7 +391,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $INTEGRATION.test-setting-decimal");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -399,7 +400,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $INTEGRATION.test-setting6");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -408,7 +409,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$MOD.test-setting-decimal = $INTEGRATION.test-setting-bool");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -417,7 +418,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID = \"test.integration\"");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -426,7 +427,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID = \"test.id\"");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -435,7 +436,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID != \"test.id\"");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -444,7 +445,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID = \"Test.ID2\"");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -453,7 +454,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID < \"Test.ID2\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -462,7 +463,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID <= \"Test.ID2\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -471,7 +472,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID > \"Test.ID2\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -480,7 +481,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID >= \"Test.ID2\"");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -489,7 +490,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID < 12");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -498,7 +499,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID <= 12");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -507,7 +508,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID > 12");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -516,7 +517,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID >= 12");
 
-			Assert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.InvalidPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -525,7 +526,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID = 12");
 
-			Assert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.DoesNotMatchPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -534,7 +535,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID != 12");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 		[Test]
@@ -543,7 +544,7 @@ namespace Continuum.Core.Test
 			var info = GetGenericModInfo();
 			var matchesPredicate = info.PredicateMatch("$INTEGRATION_ID != \"Test.ID3\"");
 
-			Assert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
+			ClassicAssert.AreEqual(PredicateMatchType.MatchesPredicate, matchesPredicate);
 		}
 
 	}

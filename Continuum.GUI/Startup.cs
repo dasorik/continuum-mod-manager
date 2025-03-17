@@ -29,6 +29,7 @@ namespace Continuum.GUI
 			services.AddSingleton<ModService>();
 			services.AddSingleton<ToastService>();
 			services.AddSingleton<DialogService>();
+			services.AddSingleton<UpdateCheckService>();
 			services.AddFileReaderService();
 			services.AddBlazorContextMenu();
 		}

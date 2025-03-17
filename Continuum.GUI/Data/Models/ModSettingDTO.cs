@@ -3,38 +3,28 @@ using Continuum.Core.Models;
 
 namespace Continuum.GUI.Models
 {
-	public class ModSettingCategoryDTO
-	{
-		public string Category;
-		public ModSettingDTO[] Settings;
+    public class ModSettingDTO
+    {
+        public string SettingID => Setting?.SettingID;
 
-		public ModSettingCategoryDTO(string category, ModSettingDTO[] settings)
-		{
-			this.Category = category;
-			this.Settings = settings;
-		}
-	}
+        public string Category;
+        public ModSetting Setting;
+        public object Value;
+        public bool IsValid = true;
+        public bool IsLocked = false;
 
-	public class ModSettingDTO
-	{
-		public string SettingID => Setting?.SettingID;
+        public string StringValue
+        {
+            get { return (string)Value; }
+            set { Value = value; }
+        }
 
-		public ModSetting Setting;
-		public object Value;
-		public bool IsValid = true;
-		public bool IsLocked = false;
-
-		public string StringValue
-		{
-			get { return (string)Value; }
-			set { Value = value; }
-		}
-
-		public ModSettingDTO(ModSetting setting, object value, bool isLocked = false)
-		{
-			this.Setting = setting;
-			this.Value = value;
-			this.IsLocked = isLocked;
-		}
-	}
+        public ModSettingDTO(ModSetting setting, string category, object value, bool isLocked = false)
+        {
+            this.Category = category;
+            this.Setting = setting;
+            this.Value = value;
+            this.IsLocked = isLocked;
+        }
+    }
 }

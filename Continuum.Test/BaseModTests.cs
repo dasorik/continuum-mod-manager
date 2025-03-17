@@ -1,19 +1,14 @@
 ﻿using Continuum.Core.Enums;
 using Continuum.Core.Models;
-using Continuum.GUI;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using Continuum.Test;
 
 namespace Continuum.Core.Test
 {
 	public class BaseModTests
 	{
-		string modTempFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestModTemp");
-		string integrationTempFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestIntegrationTemp");
-
 		protected ModInstallerConfiguration configuration { get; private set; }
 		protected string integrationCacheFolder { get; set; }
 		protected string modCacheFolder { get; set; }
@@ -22,8 +17,8 @@ namespace Continuum.Core.Test
 
 		protected void SetUpTestData()
 		{
-			this.integrationCacheFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestIntegrationCacheTemp");
-			this.modCacheFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestModCacheTemp");
+			this.integrationCacheFolder = Path.Combine(FileSystemSetup.TempPath, "TestIntegrationCacheTemp");
+			this.modCacheFolder = Path.Combine(FileSystemSetup.TempPath, "TestModCacheTemp");
 
 			this.configuration = CreateTempConfiguration();
 			this.integration = CreateTestIntegration();
@@ -34,9 +29,9 @@ namespace Continuum.Core.Test
 
 		protected ModInstallerConfiguration CreateTempConfiguration()
 		{
-			string gameFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestGameTemp");
-			string backupFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestBackupTemp");
-			string tempFolder = Path.Combine(Global.APP_DATA_FOLDER, "TestTemp");
+			string gameFolder = Path.Combine(FileSystemSetup.TempPath, "TestGameTemp");
+			string backupFolder = Path.Combine(FileSystemSetup.TempPath, "TestBackupTemp");
+			string tempFolder = Path.Combine(FileSystemSetup.TempPath, "TestTemp");
 			string toolFolder = "..\\..\\..\\Tools";
 
 			return new ModInstallerConfiguration()
@@ -110,8 +105,6 @@ namespace Continuum.Core.Test
 			Directory.CreateDirectory(configuration.TargetPath);
 			Directory.CreateDirectory(configuration.BackupFolder);
 			Directory.CreateDirectory(configuration.TempFolder);
-			Directory.CreateDirectory(modTempFolder);
-			Directory.CreateDirectory(integrationTempFolder);
 			Directory.CreateDirectory(modCacheFolder);
 			Directory.CreateDirectory(integrationCacheFolder);
 		}
@@ -126,12 +119,6 @@ namespace Continuum.Core.Test
 
 			if (Directory.Exists(configuration.TempFolder))
 				Directory.Delete(configuration.TempFolder, true);
-
-			if (Directory.Exists(modTempFolder))
-				Directory.Delete(modTempFolder, true);
-
-			if (Directory.Exists(integrationTempFolder))
-				Directory.Delete(integrationTempFolder, true);
 
 			if (Directory.Exists(modCacheFolder))
 				Directory.Delete(modCacheFolder, true);
@@ -175,8 +162,8 @@ namespace Continuum.Core.Test
 		protected virtual string CreateTempModFiles(ModConfiguration modConfig)
 		{
 			string jsonConfig = Newtonsoft.Json.JsonConvert.SerializeObject(modConfig);
-			string filePath = Path.Combine(modTempFolder, modConfig.ModID) + ".zip";
-			string modPath = Path.ChangeExtension(filePath, ".mod");
+			string filePathCacheDir = Path.Combine(modCacheFolder, modConfig.ModID) + ".mod";
+            string filePath = filePathCacheDir + ".zip";
 
 			using (var fileStream = new FileStream(filePath, FileMode.Create))
 			{
@@ -190,17 +177,20 @@ namespace Continuum.Core.Test
 				}
 			}
 
-			File.Move(filePath, modPath);
-			return modPath;
+            Directory.CreateDirectory(filePathCacheDir);
+            ZipFile.ExtractToDirectory(filePath, filePathCacheDir);
+            File.Delete(filePath);
+
+            return filePathCacheDir;
 		}
 
 		protected virtual string CreateTempIntegrationFiles(GameIntegration integration)
 		{
 			string jsonConfig = Newtonsoft.Json.JsonConvert.SerializeObject(integration);
-			string filePath = Path.Combine(integrationTempFolder, integration.IntegrationID) + ".zip";
-			string modPath = Path.ChangeExtension(filePath, ".integration");
+			string filePathCacheDir = Path.Combine(integrationCacheFolder, integration.IntegrationID) + ".integration";
+			string filePath = filePathCacheDir + ".zip";
 
-			using (var fileStream = new FileStream(filePath, FileMode.Create))
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
 			{
 				using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
 				{
@@ -212,8 +202,11 @@ namespace Continuum.Core.Test
 				}
 			}
 
-			File.Move(filePath, modPath);
-			return modPath;
+			Directory.CreateDirectory(filePathCacheDir);
+            ZipFile.ExtractToDirectory(filePath, filePathCacheDir);
+            File.Delete(filePath);
+
+			return filePathCacheDir;
 		}
 
 		private void AddFileToArchive(ZipArchive archive, string fileName, string text)
@@ -222,11 +215,6 @@ namespace Continuum.Core.Test
 			var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 			using (var zipStream = zipArchiveEntry.Open())
 				zipStream.Write(data, 0, data.Length);
-		}
-
-		DirectoryInfo GetTestModCachePath(string modID)
-		{
-			return Directory.CreateDirectory(Path.Combine(modTempFolder, modID));
 		}
 	}
 }

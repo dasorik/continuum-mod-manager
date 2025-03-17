@@ -1,5 +1,6 @@
 ﻿using Continuum.Core.Utilities;
 using Continuum.GUI;
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using System.IO;
 
@@ -63,8 +64,8 @@ namespace Continuum.Core.Test
 			ZipUtility.ZipFiles(testFiles, zipFileName);
 			ZipUtility.Unzip(zipFileName, tempExtractFolder);
 
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
+            ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
+            ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
 		}
 
 		[Test]
@@ -82,10 +83,10 @@ namespace Continuum.Core.Test
 			ZipUtility.ZipFiles(testFiles, zipFileName);
 			ZipUtility.Unzip(zipFileName, tempExtractFolder);
 
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test3.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test4.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test3.txt")));
+            ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test4.txt")));
 		}
 
 		[Test]
@@ -120,11 +121,11 @@ namespace Continuum.Core.Test
 			ZipUtility.ZipDirectory(zipArchiveRoot, zipFileName, true);
 			ZipUtility.Unzip(zipFileName, tempExtractFolder);
 
-			Assert.IsTrue(Directory.Exists(Path.Combine(tempExtractFolder, "root")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\test2.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\subdir\\test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\subdir\\subdir2\\test4.txt")));
+			ClassicAssert.IsTrue(Directory.Exists(Path.Combine(tempExtractFolder, "root")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\test.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\test2.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\subdir\\test.txt")));
+            ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "root\\subdir\\subdir2\\test4.txt")));
 		}
 
 		[Test]
@@ -141,11 +142,11 @@ namespace Continuum.Core.Test
 			ZipUtility.ZipDirectory(zipArchiveRoot, zipFileName, false);
 			ZipUtility.Unzip(zipFileName, tempExtractFolder);
 
-			Assert.IsTrue(!Directory.Exists(Path.Combine(tempExtractFolder, "root")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "subdir\\test.txt")));
-			Assert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "subdir\\subdir2\\test4.txt")));
+			ClassicAssert.IsTrue(!Directory.Exists(Path.Combine(tempExtractFolder, "root")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "test2.txt")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "subdir\\test.txt")));
+            ClassicAssert.IsTrue(File.Exists(Path.Combine(tempExtractFolder, "subdir\\subdir2\\test4.txt")));
 		}
 	}
 }

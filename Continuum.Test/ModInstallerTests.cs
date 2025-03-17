@@ -4,6 +4,7 @@ using Continuum.Core.InstallActions;
 using Continuum.Core.Models;
 using Continuum.Core.Test;
 using Continuum.Core.Utilities;
+using NUnit.Framework.Legacy;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -35,8 +36,8 @@ namespace Continuum.Core.Test
 		[Test]
 		public async Task DeleteFiles()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\asset1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\asset1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -56,15 +57,15 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\asset1.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\asset1.pak")));
 		}
 
 		[Test]
 		public async Task DeleteFiles_SameFIle()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -84,14 +85,14 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 		}
 
 		[Test]
 		public async Task DeleteFiles_NonExistent()
 		{
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource12.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource12.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -110,13 +111,13 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 		}
 
 		[Test]
 		public async Task DeleteFiles_SameFileDeletedTwice()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -149,7 +150,7 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 		}
 
 		// Move File
@@ -157,8 +158,8 @@ namespace Continuum.Core.Test
 		[Test]
 		public async Task MoveFile_GameToGame()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -175,15 +176,15 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 		}
 
 		[Test]
 		public async Task MoveFile_ModToGame()
 		{
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\mod_asset1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\mod_asset1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -200,8 +201,8 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.InvalidActions, result.status);
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\mod_asset3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.InvalidActions, result.status);
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "assets\\mod_asset3.pak")));
 		}
 
 		[Test]
@@ -222,7 +223,7 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.InvalidActions, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.InvalidActions, result.status);
 		}
 
 		[Test]
@@ -243,14 +244,14 @@ namespace Continuum.Core.Test
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.InvalidActions, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.InvalidActions, result.status);
 		}
 
 		[Test]
 		public async Task MoveFile_SameFileMovedTwice_SameLocation()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -278,16 +279,16 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 		}
 
 		[Test]
 		public async Task MoveFile_SameFileMovedTwice_DifferentLocation()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -315,16 +316,16 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
-			Assert.IsTrue(result.conflicts.First().description.Contains("Attempting to move a file"));
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
+			ClassicAssert.IsTrue(result.conflicts.First().description.Contains("Attempting to move a file"));
 		}
 
 		[Test]
 		public async Task MoveFile_DifferentFilesMoved_SameDestination()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -352,16 +353,16 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
-			Assert.IsTrue(result.conflicts.First().description.Contains("Attempting to move a file that has been added by another mod (with different data)"), result.conflicts.First().description);
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
+			ClassicAssert.IsTrue(result.conflicts.First().description.Contains("Attempting to move a file that has been added by another mod (with different data)"), result.conflicts.First().description);
 		}
 
 		[Test]
 		public async Task MoveFile_DifferentFilesMoved_DifferentDestination()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -389,18 +390,18 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource4.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(this.configuration.TargetPath, "resource2.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource4.pak")));
 		}
 
 		[Test]
 		public async Task MoveFile_SameFileDeleted()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -430,13 +431,13 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 		}
 
 		[Test]
 		public async Task MoveFile_SameFileDeleted_Invterted()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -466,7 +467,7 @@ namespace Continuum.Core.Test
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 		}
 
 
@@ -474,7 +475,7 @@ namespace Continuum.Core.Test
 		[Test]
 		public async Task ReplaceFile_SameFileReplaced_SameContents()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -501,7 +502,7 @@ namespace Continuum.Core.Test
 			var mod1FilePath = CreateTempModFiles(modConfig);
 			var mod2FilePath = CreateTempModFiles(modConfig2);
 
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(mod1FilePath, mod2FilePath);
 
 			var modInstallInfo = GetModInstallationInfo(modConfig);
@@ -511,14 +512,14 @@ namespace Continuum.Core.Test
 			string originalFilePath = Path.Combine(modConfig.CacheFolder, "resources\\mod_resource1.pak");
 			string replacedFilePath = Path.Combine(this.configuration.TargetPath, "resource1.pak");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.AreEqual(MD5Utility.CalculateMD5Hash(originalFilePath), MD5Utility.CalculateMD5Hash(replacedFilePath));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(MD5Utility.CalculateMD5Hash(originalFilePath), MD5Utility.CalculateMD5Hash(replacedFilePath));
 		}
 
 		[Test]
 		public async Task ReplaceFile_SameFileReplaced_DifferentContents()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -545,21 +546,21 @@ namespace Continuum.Core.Test
 			var mod1FilePath = CreateTempModFiles(modConfig);
 			var mod2FilePath = CreateTempModFiles(modConfig2);
 
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(mod1FilePath, mod2FilePath);
 
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(new[] { modInstallInfo, modInstallInfo2 });
 
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
 		}
 
 
 		[Test]
 		public async Task ZipFiles()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -578,14 +579,14 @@ namespace Continuum.Core.Test
 
 			string zipPath = Path.Combine(this.configuration.TargetPath, "resource_zip.zip");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(File.Exists(zipPath));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(File.Exists(zipPath));
 		}
 
 		[Test]
 		public async Task ZipDirectory()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -604,14 +605,14 @@ namespace Continuum.Core.Test
 
 			string zipPath = Path.Combine(this.configuration.TargetPath, "resource_zip.zip");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(File.Exists(zipPath));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(File.Exists(zipPath));
 		}
 
 		[Test]
 		public async Task UnzipFile_DontDeleteOnComplete()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -632,15 +633,15 @@ namespace Continuum.Core.Test
 			string originalZipPath = Path.Combine(this.configuration.TargetPath, "zip1.zip");
 			string newZipPath = Path.Combine(this.configuration.TargetPath, "unzipped_assets");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(File.Exists(originalZipPath));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath, "game_resource1.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(File.Exists(originalZipPath));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath, "game_resource1.pak")));
 		}
 
 		[Test]
 		public async Task UnzipFile_DeleteOnComplete()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -661,15 +662,15 @@ namespace Continuum.Core.Test
 			string originalZipPath = Path.Combine(this.configuration.TargetPath, "zip1.zip");
 			string newZipPath = Path.Combine(this.configuration.TargetPath, "unzipped_assets");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(originalZipPath));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath, "game_resource1.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(originalZipPath));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath, "game_resource1.pak")));
 		}
 
 		[Test]
 		public async Task UnzipFiles_DontDeleteOnComplete()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -691,17 +692,17 @@ namespace Continuum.Core.Test
 			string newZipPath1 = Path.Combine(this.configuration.TargetPath, "zip1");
 			string newZipPath2 = Path.Combine(this.configuration.TargetPath, "zip2");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(File.Exists(originalZipPath1));
-			Assert.IsTrue(File.Exists(originalZipPath2));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(File.Exists(originalZipPath1));
+			ClassicAssert.IsTrue(File.Exists(originalZipPath2));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
 		}
 
 		[Test]
 		public async Task UnzipFiles_DeleteOnComplete()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -723,17 +724,17 @@ namespace Continuum.Core.Test
 			string newZipPath1 = Path.Combine(this.configuration.TargetPath, "zip1");
 			string newZipPath2 = Path.Combine(this.configuration.TargetPath, "zip2");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(originalZipPath1));
-			Assert.IsTrue(!File.Exists(originalZipPath2));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(originalZipPath1));
+			ClassicAssert.IsTrue(!File.Exists(originalZipPath2));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
 		}
 
 		[Test]
 		public async Task UnzipFiles_ExtractToSameDirectory()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var installer = new ModInstaller(configuration, integration);
 			var modConfig = CreateTestModConfig("test-mod");
@@ -756,19 +757,19 @@ namespace Continuum.Core.Test
 			string newZipPath1 = Path.Combine(this.configuration.TargetPath, "zip1");
 			string newZipPath2 = Path.Combine(this.configuration.TargetPath, "zip2");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(originalZipPath1));
-			Assert.IsTrue(!File.Exists(originalZipPath2));
-			Assert.IsTrue(!File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
-			Assert.IsTrue(!File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "game_resource1.pak")));
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "game_resource3.pak")));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(originalZipPath1));
+			ClassicAssert.IsTrue(!File.Exists(originalZipPath2));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(newZipPath1, "game_resource1.pak")));
+			ClassicAssert.IsTrue(!File.Exists(Path.Combine(newZipPath2, "game_resource3.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "game_resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "game_resource3.pak")));
 		}
 
 		[Test]
 		public async Task Integration_Setup()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var newIntegration = CreateTestIntegration("test-integration");
 			var installer = new ModInstaller(configuration, newIntegration);
@@ -783,20 +784,19 @@ namespace Continuum.Core.Test
 			};
 
 			string path = CreateTempIntegrationFiles(newIntegration);
-			Utilities.ZipUtility.Unzip(path, newIntegration.CacheFolder);
 
 			var result = await installer.ApplySetupActions(newIntegration);
 
 			string integrationFile = Path.Combine(this.configuration.TargetPath, "test.pak");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(File.Exists(integrationFile));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(File.Exists(integrationFile));
 		}
 
 		[Test]
 		public async Task Integration_Setup_NoFileMoves()
 		{
-			Assert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
+			ClassicAssert.IsTrue(File.Exists(Path.Combine(this.configuration.TargetPath, "resource1.pak")));
 
 			var newIntegration = CreateTestIntegration("test-integration");
 			var installer = new ModInstaller(configuration, newIntegration);
@@ -804,14 +804,13 @@ namespace Continuum.Core.Test
 			newIntegration.SetupActions = new ModInstallAction[0];
 
 			string path = CreateTempIntegrationFiles(newIntegration);
-			Utilities.ZipUtility.Unzip(path, newIntegration.CacheFolder);
 
 			var result = await installer.ApplySetupActions(newIntegration);
 
 			string integrationFile = Path.Combine(this.configuration.TargetPath, "test.pak");
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
-			Assert.IsTrue(!File.Exists(integrationFile));
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.IsTrue(!File.Exists(integrationFile));
 		}
 
 		[Test]
@@ -835,13 +834,13 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(modPath);
 
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.RolledBackError, result.status); // Mod doesn't conflict with itself, but does still fail
+			ClassicAssert.AreEqual(InstallationStatus.RolledBackError, result.status); // Mod doesn't conflict with itself, but does still fail
 		}
 
 		[Test]
@@ -865,13 +864,13 @@ namespace Continuum.Core.Test
 			};
 
 			var modPath = CreateTempModFiles(modConfig);
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(modPath);
 
 			var modInstallInfo = GetModInstallationInfo(modConfig);
 			var result = await installer.ApplyChanges(modInstallInfo);
 
-			Assert.AreEqual(InstallationStatus.Success, result.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, result.status);
 		}
 
 		[Test]
@@ -902,15 +901,15 @@ namespace Continuum.Core.Test
 			var modPath1 = CreateTempModFiles(modConfig1);
 			var modPath2 = CreateTempModFiles(modConfig2);
 
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(modPath1, modPath2);
 
 			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
 			var modInstallInfo2 = GetModInstallationInfo(modConfig2);
 			var result = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2);
 
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
-			Assert.AreEqual("test-mod", result.conflicts.FirstOrDefault().modID);
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, result.status);
+			ClassicAssert.AreEqual("test-mod", result.conflicts.FirstOrDefault().modID);
 		}
 
 		[Test]
@@ -952,7 +951,7 @@ namespace Continuum.Core.Test
 			var modPath2 = CreateTempModFiles(modConfig2);
 			var modPath3 = CreateTempModFiles(modConfig3);
 
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(modPath1, modPath2, modPath3);
 
 			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
@@ -963,16 +962,16 @@ namespace Continuum.Core.Test
 			var firstResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2);
 			var secondResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2, modInstallInfo3);
 
-			Assert.AreEqual(InstallationStatus.Success, firstResult.status);
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, firstResult.status);
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
 
 			string modFile1 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_renamed.pak");
 			string modFile2 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_renamed.pak");
 			string modFile3 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_conflict.pak");
 
-			Assert.IsTrue(File.Exists(modFile1));
-			Assert.IsTrue(File.Exists(modFile2));
-			Assert.IsTrue(!File.Exists(modFile3));
+			ClassicAssert.IsTrue(File.Exists(modFile1));
+			ClassicAssert.IsTrue(File.Exists(modFile2));
+			ClassicAssert.IsTrue(!File.Exists(modFile3));
 		}
 
 		[Test]
@@ -1014,7 +1013,7 @@ namespace Continuum.Core.Test
 			var modPath2 = CreateTempModFiles(modConfig2);
 			var modPath3 = CreateTempModFiles(modConfig3);
 
-			var loader = new ModLoader(modCacheFolder, new[] { integration });
+			var loader = new ModLoader(new[] { integration });
 			loader.Load(modPath1, modPath2, modPath3);
 
 			var modInstallInfo1 = GetModInstallationInfo(modConfig1);
@@ -1025,16 +1024,16 @@ namespace Continuum.Core.Test
 			var firstResult = await installer.ApplyChanges(modInstallInfo1);
 			var secondResult = await installer.ApplyChanges(modInstallInfo1, modInstallInfo2, modInstallInfo3);
 
-			Assert.AreEqual(InstallationStatus.Success, firstResult.status);
-			Assert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
+			ClassicAssert.AreEqual(InstallationStatus.Success, firstResult.status);
+			ClassicAssert.AreEqual(InstallationStatus.UnresolvableConflict, secondResult.status);
 
 			string modFile1 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_renamed.pak");
 			string modFile2 = Path.Combine(this.configuration.TargetPath, "assets\\asset2_renamed.pak");
 			string modFile3 = Path.Combine(this.configuration.TargetPath, "assets\\asset1_conflict.pak");
 
-			Assert.IsTrue(File.Exists(modFile1));
-			Assert.IsTrue(!File.Exists(modFile2));
-			Assert.IsTrue(!File.Exists(modFile3));
+			ClassicAssert.IsTrue(File.Exists(modFile1));
+			ClassicAssert.IsTrue(!File.Exists(modFile2));
+			ClassicAssert.IsTrue(!File.Exists(modFile3));
 		}
 	}
 }
